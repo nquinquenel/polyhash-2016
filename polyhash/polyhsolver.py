@@ -10,11 +10,9 @@
     >>> solve()
 """
 
+from polyhutils import say_hello
 
 __all__ = ['solve']  # ajouter dans cette liste tous les symboles 'importables'
-
-
-from polyhutils import say_hello
 
 def solve():
     """
