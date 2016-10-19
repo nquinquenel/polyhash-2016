@@ -1,12 +1,13 @@
-Projet Poly#
+Projet Poly
 ===========
 
-Une brève description ici.
+Etant donné un ensemble de satellites et une liste de points d'intérêts à photographier, planifier le travail de chaque satellite de sorte à maximiser le nombre d'images satellite réalisées dans un temps donné.
 
-Le fichier `README.md` est écrit en **Markdown**
-et permet de soigner la _mise en forme_
 
 L'équipe
 ===========
 
-à compléter
+Ehresmann Nicolas
+QUINQUENEL Nicolas
+OUTHIER Arthur
+SOYER Mathieu
