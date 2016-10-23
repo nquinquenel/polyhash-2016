@@ -8,12 +8,18 @@ de points d'intérêt à photographier, de sorte à maximiser le nombre d'images
 
 Equipe et répartition des tâches (à définir) :
 
+
 -QUINQUENEL Nicolas:
+
     -Calcul de la trajectoire d'un satellite
     -Calcul de l'orientation d'un satellite
+    
+    
 -SOYER Mathieu:
 
+
 -EHRESMANN Nicolas:
+
 
 -OUTHIER Arthur:
     -Entrées/Sorties
