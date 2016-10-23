@@ -20,7 +20,8 @@ class Lanceur:
     def lancerSimulation(self) :
         #Tant que le temps de la simulation n'est pas ecoule
         while not self.temps.tempsEcoule():
-            self.listeSatellite[0].calculePosition()
+            for sat in self.listeSatellite:
+                sat.calculePosition()
             self.temps.incrementer()
     
 l1 = Lanceur()
