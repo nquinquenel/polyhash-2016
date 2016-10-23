@@ -1,0 +1,15 @@
+La structure du projet a été défini (mais peut être sujet à changement).
+
+Dans le répertoire PolyHash_tmp se trouve actuellement le projet. Il y a cependant une organisation à respecter (main.py, polyhmodel.py,
+polyhsolver.py etc.), il sera donc nécessaire de la respecter.
+
+Ce qui a été fait : 
+
+-Mise en place de la structure
+-Classe Temps O.K.
+-Calcule de la trajectoire d'un satellite
+-Instanciations de toutes les classes possibles
+
+Ce qui reste à faire :
+
+-Quasiment tout (toutes les méthodes qui n'ont pas été définies)
