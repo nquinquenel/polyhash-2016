@@ -24,7 +24,7 @@ class Lanceur:
         return 0
     
     def validationCollection(self):
-        return 0
+        return -1
     
     def lancerSimulation(self) :
         #Tant que le temps de la simulation n'est pas ecoule
