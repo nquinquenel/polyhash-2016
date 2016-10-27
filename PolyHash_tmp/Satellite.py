@@ -8,14 +8,13 @@ from Camera import Camera
 
 class Satellite:
     
-    def __init__(self, latitude, longitude, vitesse, orientationMax, delaiPhoto):
+    def __init__(self, latitude, longitude, vitesse):
         self.latitude = latitude
         self.longitude = longitude
         self.vitesse = vitesse
-        self.orientationMax = orientationMax
         self.deltaLatitude = 0
         self.deltaLongitude = 0
-        self.delaiPhoto = delaiPhoto
+        self.delaiPhoto = 1
         self.changementOrientationMax = 200
         self.orientationMax = 10000
         self.camera = Camera(self.latitude, self.longitude, self.deltaLatitude, self.deltaLongitude)

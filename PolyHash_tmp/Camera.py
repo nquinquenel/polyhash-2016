@@ -6,9 +6,9 @@ Created on 23 oct. 2016
 
 class Camera:
     
-    def __init__(self, latitude, longitude, deltaLatitude, deltaLongitude):
-        self.pointageLatitude = latitude - deltaLatitude
-        self.pointageLongitude = longitude - deltaLongitude
+    def __init__(self, pointageLatitude, pointageLongitude):
+        self.pointageLatitude = pointageLatitude
+        self.pointageLongitude = pointageLongitude
     
     def prendrePhoto(self):
         return True
