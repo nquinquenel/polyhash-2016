@@ -17,7 +17,7 @@ class Satellite:
         self.delaiPhoto = 1
         self.changementOrientationMax = 200
         self.orientationMax = 10000
-        self.camera = Camera(self.latitude, self.longitude, self.deltaLatitude, self.deltaLongitude)
+        self.camera = Camera(self.latitude + self.deltaLatitude, self.deltaLongitude + self.deltaLongitude)
         
     def changerOrientation(self):
         return True
