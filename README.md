@@ -11,15 +11,20 @@ Equipe et répartition des tâches (à définir) :
 
 -QUINQUENEL Nicolas:
 
-    -Calcul de la trajectoire d'un satellite
-    -Calcul de l'orientation d'un satellite
+    -Gestion de la classe Camera
+        -Prendre une photo
+        -Déterminer le nombres de photos possibles
+        -...
     
     
 -SOYER Mathieu:
 
+    -Gestion de la classe collection
 
 -EHRESMANN Nicolas:
 
+    -Gestion de la classe Satellite
+        -Calculer l'oritentation du satellite et de la camera
 
 -OUTHIER Arthur:
 
