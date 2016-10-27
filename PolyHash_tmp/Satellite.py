@@ -4,20 +4,20 @@ Created on 23 oct. 2016
 @author: Nicolas
 '''
 
-from Camera import Camera
-
 class Satellite:
     
-    def __init__(self, latitude, longitude, vitesse):
+    def __init__(self, latitude, longitude, vitesse, changementOrientationMax, orientationMax):
         self.latitude = latitude
         self.longitude = longitude
         self.vitesse = vitesse
+        self.changementOrientationMax = changementOrientationMax
+        self.orientationMax = orientationMax
         self.deltaLatitude = 0
         self.deltaLongitude = 0
+        self.pointageLatitude = self.latitude + self.deltaLatitude
+        self.pointageLongitude = self.longitude + self.deltaLongitude
+        self.pointageLongitude = 0
         self.delaiPhoto = 1
-        self.changementOrientationMax = 200
-        self.orientationMax = 10000
-        self.camera = Camera(self.latitude + self.deltaLatitude, self.deltaLongitude + self.deltaLongitude)
         
     def changerOrientation(self):
         return True
@@ -47,3 +47,7 @@ class Satellite:
     
     def getPosition(self):
         return self.latitude, self.longitude
+    
+    def calculPointageCamera(self):
+        self.pointageLatitude = self.latitude + self.deltaLatitude
+        self.pointageLongitude = self.longitude + self.deltaLongitude

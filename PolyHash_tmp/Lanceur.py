@@ -11,7 +11,7 @@ class Lanceur:
     
     def __init__(self):
         self.listeSatellite = []
-        self.listeSatellite.append(Satellite(176400, 7200, 120))
+        self.listeSatellite.append(Satellite(176400, 7200, 120, 200, 10000))
         self.listeCollection = []
         self.score = 0
         self.temps = Temps(3600)
