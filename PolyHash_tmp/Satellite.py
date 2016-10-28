@@ -49,5 +49,10 @@ class Satellite:
         return self.latitude, self.longitude
     
     def calculPointageCamera(self):
-        self.pointageLatitude = self.latitude + self.deltaLatitude
-        self.pointageLongitude = self.longitude + self.deltaLongitude
+        self.pointageLatitude = self.latitude + self.deltaLatitude		        self.pointageLongitude = self.longitude + self.deltaLongitude
+    def prendrePhoto():
+	return True
+    def nombrePhotoPossible(liste):
+	return 0
+    def getPointageCamera():
+	return self.pointageLatitude, self.pointageLongitude
