@@ -20,6 +20,12 @@ class Satellite:
         self.numero = numero
         
     def changerOrientationLatitude(self, valeur):
+        """
+        Change la valeur de l'orientation pour la latitude (deltaLatitude)
+        :param valeur: La valeur du changement de l'orientation (ne doit pas etre superieur ou inferieur
+                        a changementOrientationMax et ne doit pas depasser les limites de l orientation maximum)
+        """
+        
         if valeur > self.changementOrientationMax or valeur < -self.changementOrientationMax:
             raise ValueError("Changement trop important")
         elif (self.deltaLatitude + valeur) < -self.orientationMax or (self.deltaLatitude + valeur) > self.orientationMax:
@@ -28,6 +34,12 @@ class Satellite:
             self.deltaLatitude += valeur  
               
     def changerOrientationLongitude(self, valeur):
+        """
+        Change la valeur de l'orientation pour la longitude (deltaLongitude)
+        :param valeur: La valeur du changement de l'orientation (ne doit pas etre superieur ou inferieur
+                        a changementOrientationMax et ne doit pas depasser les limites de l orientation maximum)
+        """
+        
         if valeur > self.changementOrientationMax or valeur < -self.changementOrientationMax:
             raise ValueError("Changement trop important")
         elif (self.deltaLongitude + valeur) < -self.orientationMax or (self.deltaLongitude + valeur) > self.orientationMax:
@@ -36,6 +48,10 @@ class Satellite:
             self.deltaLongitude += valeur  
     
     def calculePosition(self):
+        """
+        Calcul la position du satellite au tour t+1
+        """
+        
         #Si latitude + vitesse se trouve entre -90° et 90°
         if self.latitude <= 324000 and self.latitude >= -324000:
             self.latitude = self.latitude + self.vitesse
