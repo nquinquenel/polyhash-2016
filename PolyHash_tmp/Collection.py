@@ -13,26 +13,26 @@ class Collection:
             self.listeCoordonnees = listeCoordonnees
             self.tempsRequis = tempsRequis
         else:
-            self.listeCoordonnes = []
+            self.listeCoordonnees = []
             self.tempsRequis = []
 
-    def getvaleur():
+    def getvaleur(self):
         return self.valeurPoints
 	
-    def getCoordonnees():
+    def getCoordonnees(self):
         return self.listeCoordonnees
 
-    def getTemps():
+    def getTemps(self):
         return self.tempsRequis
     
-    def getCoordonneesReussies():
+    def getCoordonneesReussies(self):
         return self.getCoordonneesReussies
 			
-    def suppressionElement(liste):
+    def suppressionElement(self,liste):
             self.listeCoordonnees.remove(liste)
             return estVide()
 
-    def estVide():
+    def estVide(self):
         if not self.listeCoordonnees:
             return True
         else:

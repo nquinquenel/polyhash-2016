@@ -5,16 +5,19 @@ Created on 23 oct. 2016
 '''
 
 from Temps import Temps
-from Satellite import Satellite
+from Collection import Collection
+#from Satellite import Satellite
 
 class Lanceur:
     
-    def __init__(self):
+    def __init__(self,fichier):
         self.listeSatellite = []
         self.listeCollection = []
         self.score = 0
+        self.temps = None
+        self.nomFichier = fichier
         self.lectureFichier()
-        self.lancerSimulation()
+        #self.lancerSimulation()
         
     def lectureFichier(self):
         compteur = 0
@@ -26,34 +29,34 @@ class Lanceur:
             for ligne in f:
                 #Initialisation du temps de la simulation
                 if(compteur == 0):
-                    self.temps = new Temps(int(ligne))
-                    #print(str(ligne) + ": temps de la simulation")
+                    self.temps = Temps(int(ligne))
+                    print(str(ligne) + ": temps de la simulation")
                     compteur += 1
                 #Nombre de satellites
                 elif(compteur == 1):
                     boucle = int(ligne)
-                    #print(str(ligne) + ": nombre de satellites")
+                    print(str(ligne) + ": nombre de satellites")
                     compteur += 1
                 #Découpage des satellites
                 elif(compteur == 2):
                     coord = ligne.split(" ")
-                    self.getListeSatellite.append(New Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle)
-                    #print(str(coord[0])+ "," + str(coord[1]) + "," + str(coord[2]) + "," + str(coord[3]) + "," + str(coord[4]) + ": nouveau satelitte")
+                    print(str(coord[0])+ "," + str(coord[1]) + "," + str(coord[2]) + "," + str(coord[3]) + "," + str(coord[4]) + ": nouveau satelitte")
+                    #self.getListeSatellite.append(New Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle)
                     boucle -= 1
                     if(boucle == 0):
                         compteur += 1
                 #Nombre de collections
                 elif(compteur == 3):
                     boucle = int(ligne)
-                    #print(str(ligne) + ": nombre de collections")
+                    print(str(ligne) + ": nombre de collections")
                     compteur += 1
                 #Découpage de collections                          
                 elif(compteur == 4):
                     value = ligne.split(" ")
-                    #print(value[0] + ": Score de la collection, " + value[1] + ": Nombre d'images, " + value[2] + ": Nombre de conditions") 
+                    print(value[0] + ": Score de la collection, " + value[1] + ": Nombre d'images, " + value[2] + ": Nombre de conditions")
                     boucle2 = int(value[1])
                     boucle3 = int(value[2])
-                    collection = New Collection(int(value[0]))
+                    collection = Collection(int(value[0]))
                     self.getListeCollection().append(collection)
                     compteur += 1
                 #Répartition des coordonnées
@@ -61,8 +64,8 @@ class Lanceur:
                     liste = ligne.split(" ")
                     liste[0] = float(liste[0])
                     liste[1] = float(liste[1])
-                    #print(liste)
-                    collection.getCoordonnees().append(liste) 
+                    print(liste)
+                    collection.getCoordonnees().append(liste)
                     boucle2 -= 1
                     if(boucle2 == 0):
                         compteur += 1
@@ -71,7 +74,7 @@ class Lanceur:
                     liste = ligne.split(" ")
                     liste[0] = float(liste[0])
                     liste[1] = float(liste[1])
-                    #print(liste)
+                    print(liste)
                     collection.getTemps().append(liste) 
                     boucle3 -= 1
                     boucle -= 1
@@ -102,4 +105,4 @@ class Lanceur:
     def getListeCollection(self):
         return self.listeCollection
     
-l1 = Lanceur()
+l1 = Lanceur("test.txt")
