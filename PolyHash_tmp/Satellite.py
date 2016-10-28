@@ -90,7 +90,7 @@ class Satellite:
         return ret
     
     def nombrePhotoPossible(liste):
-	   return 0
+	    return 0
 
     def getPointageCamera():
-	   return self.pointageLatitude, self.pointageLongitude
+	    return self.pointageLatitude, self.pointageLongitude

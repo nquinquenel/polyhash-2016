@@ -17,7 +17,6 @@ class Lanceur:
         self.temps = None
         self.nomFichier = fichier
         self.lectureFichier()
-        # self.lancerSimulation()
 
     def lectureFichier(self):
         compteur = 0
@@ -93,11 +92,7 @@ class Lanceur:
         return -1
 
     def lancerSimulation(self) :
-        #Tant que le temps de la simulation n'est pas ecoulee
-        while not self.temps.tempsEcoule():
-            for sat in self.getListeSatellite():
-                sat.calculePosition()
-            self.temps.incrementer()
+        return 0
 
     def getListeSatellite(self):
         return self.listeSatellite
