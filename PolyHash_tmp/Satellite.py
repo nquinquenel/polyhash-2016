@@ -6,7 +6,7 @@ Created on 23 oct. 2016
 
 class Satellite:
     
-    def __init__(self, latitude, longitude, vitesse, changementOrientationMax, orientationMax):
+    def __init__(self, latitude, longitude, vitesse, changementOrientationMax, orientationMax, numero):
         self.latitude = latitude
         self.longitude = longitude
         self.vitesse = vitesse
@@ -18,9 +18,23 @@ class Satellite:
         self.pointageLongitude = self.longitude + self.deltaLongitude
         self.pointageLongitude = 0
         self.delaiPhoto = 1
+        self.numero = numero
         
-    def changerOrientation(self):
-        return True
+    def changerOrientationLatitude(self, valeur):
+        if valeur > self.changementOrientationMax or valeur < -self.changementOrientationMax:
+            raise ValueError("Changement trop important")
+        elif (self.deltaLatitude + valeur) < -self.orientationMax or (self.deltaLatitude + valeur) > self.orientationMax:
+            raise ValueError("Hors des limites de l'orientation maximum")
+        else:
+            self.deltaLatitude += valeur  
+              
+    def changerOrientationLongitude(self, valeur):
+        if valeur > self.changementOrientationMax or valeur < -self.changementOrientationMax:
+            raise ValueError("Changement trop important")
+        elif (self.deltaLongitude + valeur) < -self.orientationMax or (self.deltaLongitude + valeur) > self.orientationMax:
+            raise ValueError("Hors des limites de l'orientation maximum")
+        else:
+            self.deltaLongitude += valeur  
     
     def calculePosition(self):
         #Si latitude + vitesse se trouve entre -90° et 90°
@@ -49,10 +63,19 @@ class Satellite:
         return self.latitude, self.longitude
     
     def calculPointageCamera(self):
-        self.pointageLatitude = self.latitude + self.deltaLatitude		        self.pointageLongitude = self.longitude + self.deltaLongitude
-    def prendrePhoto():
-	return True
+        self.pointageLatitude = self.latitude + self.deltaLatitude
+        self.pointageLongitude = self.longitude + self.deltaLongitude
+    
+    def prendrePhoto(self, tour):
+        ret = [4]
+        ret[0] = self.latitude + self.deltaLatitude
+        ret[1] = self.longitude + self.deltaLongitude
+        ret[2] = self.numero
+        ret[3] = tour
+        return ret
+    
     def nombrePhotoPossible(liste):
-	return 0
+	   return 0
+
     def getPointageCamera():
-	return self.pointageLatitude, self.pointageLongitude
+	   return self.pointageLatitude, self.pointageLongitude
