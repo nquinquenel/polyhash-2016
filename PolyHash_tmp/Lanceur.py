@@ -41,7 +41,7 @@ class Lanceur:
                 elif(compteur == 2):
                     coord = ligne.split(" ")
                     print(str(coord[0])+ "," + str(coord[1]) + "," + str(coord[2]) + "," + str(coord[3]) + "," + str(coord[4]) + ": nouveau satelitte")
-                    self.getListeSatellite.append(Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle)
+                    self.listeSatellite.append(Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle))
                     boucle -= 1
                     if(boucle == 0):
                         compteur += 1
