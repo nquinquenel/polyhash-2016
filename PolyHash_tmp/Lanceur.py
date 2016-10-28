@@ -6,10 +6,10 @@ Created on 23 oct. 2016
 
 from Temps import Temps
 from Collection import Collection
-#from Satellite import Satellite
+from Satellite import Satellite
 
 class Lanceur:
-    
+
     def __init__(self,fichier):
         self.listeSatellite = []
         self.listeCollection = []
@@ -17,8 +17,8 @@ class Lanceur:
         self.temps = None
         self.nomFichier = fichier
         self.lectureFichier()
-        #self.lancerSimulation()
-        
+        # self.lancerSimulation()
+
     def lectureFichier(self):
         compteur = 0
         boucle = 0
@@ -41,7 +41,7 @@ class Lanceur:
                 elif(compteur == 2):
                     coord = ligne.split(" ")
                     print(str(coord[0])+ "," + str(coord[1]) + "," + str(coord[2]) + "," + str(coord[3]) + "," + str(coord[4]) + ": nouveau satelitte")
-                    #self.getListeSatellite.append(New Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle)
+                    self.getListeSatellite.append(Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle)
                     boucle -= 1
                     if(boucle == 0):
                         compteur += 1
@@ -50,7 +50,7 @@ class Lanceur:
                     boucle = int(ligne)
                     print(str(ligne) + ": nombre de collections")
                     compteur += 1
-                #Découpage de collections                          
+                #Découpage de collections
                 elif(compteur == 4):
                     value = ligne.split(" ")
                     print(value[0] + ": Score de la collection, " + value[1] + ": Nombre d'images, " + value[2] + ": Nombre de conditions")
@@ -69,13 +69,13 @@ class Lanceur:
                     boucle2 -= 1
                     if(boucle2 == 0):
                         compteur += 1
-                    #Délais de temps 
+                    #Délais de temps
                 elif(compteur == 6):
                     liste = ligne.split(" ")
                     liste[0] = float(liste[0])
                     liste[1] = float(liste[1])
                     print(liste)
-                    collection.getTemps().append(liste) 
+                    collection.getTemps().append(liste)
                     boucle3 -= 1
                     boucle -= 1
                     if(boucle3 == 0):
@@ -85,13 +85,13 @@ class Lanceur:
                         else:
                             #On rollback pour faire une autre collection
                             compteur = 4
-    
+
     def fichierSortie(self):
         return 0
-    
+
     def validationCollection(self):
         return -1
-    
+
     def lancerSimulation(self) :
         #Tant que le temps de la simulation n'est pas ecoulee
         while not self.temps.tempsEcoule():
@@ -104,5 +104,5 @@ class Lanceur:
 
     def getListeCollection(self):
         return self.listeCollection
-    
+
 l1 = Lanceur("test.txt")
