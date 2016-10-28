@@ -16,7 +16,6 @@ class Satellite:
         self.deltaLongitude = 0
         self.pointageLatitude = self.latitude + self.deltaLatitude
         self.pointageLongitude = self.longitude + self.deltaLongitude
-        self.pointageLongitude = 0
         self.delaiPhoto = 1
         self.numero = numero
         
