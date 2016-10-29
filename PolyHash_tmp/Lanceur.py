@@ -39,6 +39,22 @@ class Lanceur:
             intervals de prise de vue requis
         """
         
+        with open(self.nomFichier,'r') as f:
+            self.temps = Temps(int(f.readline()))
+            for i in range(0, int(f.readline())):
+                coord = f.readline().split(" ")
+                self.listeSatellite.append(Satellite(int(coord[0]),int(coord[1]),float(coord[2]),int(coord[3]),int(coord[4]),i+1))
+            for i in range(0, int(f.readline())):
+                line = f.readline().split(" ")
+                images = []
+                temps = []
+                for p in range(0, int(line[1])):
+                    images.append(f.readline().strip('\n').split(" "))
+                for p in range(0, int(line[2])):
+                    temps.append(f.readline().strip('\n').split(" "))
+                self.listeCollection.append(Collection(line[0], images, temps))
+                
+        """
         compteur = 0
         boucle = 0
         collection = None
@@ -104,6 +120,12 @@ class Lanceur:
                         else:
                             #On rollback pour faire une autre collection
                             compteur = 4
+            """
+        
+        for i in self.listeCollection:
+            print(i.string())
+        for i in self.listeSatellite:
+            print(i.string())
 
     def fichierSortie(self):
         """

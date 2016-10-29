@@ -41,3 +41,6 @@ class Collection:
             return True
         else:
             return False
+        
+    def string(self):
+        return "Valeur points: ",self.valeurPoints," Liste coordonnees: ",self.listeCoordonnees," Temps requis: ",self.tempsRequis

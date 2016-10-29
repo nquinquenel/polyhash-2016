@@ -9,9 +9,9 @@ class Satellite:
         :param latitude: la latitude de depart en arcsec
         :param longitude: la longitude de depart en arcsec
         :param vitesse: la vitesse de depart en arcsec
-        :param changementOrientationMax: le changement d'orientation max du satellite d'un tour a l'autre en arcsec (0 < changementOrientationMax < 200)
-        :param orientationMax: l'orientation max du satellite en arcsec (0 < orientationMax < 10000)
-        :param numero: le numero donne a l'objet de type Satellite
+        :param changementOrientationMax: le changement d'orientation max du satellite d un tour a l autre en arcsec (0 < changementOrientationMax < 200)
+        :param orientationMax: l orientation max du satellite en arcsec (0 < orientationMax < 10000)
+        :param numero: le numero donne a l objet de type Satellite
         """
         
         self.latitude = latitude
@@ -136,3 +136,6 @@ class Satellite:
         """
         
         return self.pointageLatitude, self.pointageLongitude
+
+    def string(self):
+        return "Latitude: ",self.latitude," Longitude: ",self.longitude," Vitesse: ",self.vitesse," Changement Orientation Max: ",self.changementOrientationMax," Orientation Max: ",self.orientationMax," Numero: ",self.numero
