@@ -19,6 +19,7 @@ class Lanceur:
         self.temps = None
         self.nomFichier = fichier
         self.lectureFichier()
+        self.lancerSimulation()
 
     def lectureFichier(self):
         """
@@ -45,7 +46,7 @@ class Lanceur:
             #On creer les satellites
             for i in range(0, int(f.readline())):
                 coord = f.readline().split(" ")
-                self.listeSatellite.append(Satellite(int(coord[0]),int(coord[1]),float(coord[2]),int(coord[3]),int(coord[4]),i+1))
+                self.listeSatellite.append(Satellite(int(coord[0]),int(coord[1]),float(coord[2]),int(coord[3]),int(coord[4]),i))
             #Ajout des collections d images
             for i in range(0, int(f.readline())):
                 #line contient 1) Points 2) Nombre d images 3) Nombre d intervalles de temps
@@ -160,8 +161,14 @@ class Lanceur:
         """
         Lancement de la simulation
         """
-
-        return 0 #Pourquoi un return ?! #Parce que ca plante si y a rien dans la fonction?! ..............MDR :D
+        
+        while self.temps.getTempsActuel() < self.temps.getTempsTotal():
+            for s in self.listeSatellite:
+                for c in self.listeCollection:
+                    if s.nombrePhotoPossible(c.getCoordonnees()) > 0:
+                        print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero())
+                s.calculePosition()
+            self.temps.incrementer()
 
     def getListeSatellite(self):
         """

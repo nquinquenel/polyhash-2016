@@ -61,16 +61,16 @@ class Satellite:
         Calcul la position du satellite au tour t+1
         """
         
-        #Si latitude + vitesse se trouve entre -90° et 90°
+        #Si latitude + vitesse se trouve entre -90 degre et 90 degre
         if self.latitude <= 324000 and self.latitude >= -324000:
             self.latitude = self.latitude + self.vitesse
             self.longitude = self.longitude - 15
-        #Si latitude + vitesse se trouve superieur a 90° (il vient de depasser le Pole Nord)
+        #Si latitude + vitesse se trouve superieur a 90 degre (il vient de depasser le Pole Nord)
         elif self.latitude > 324000:
             self.latitude = (324000*2) - (self.latitude + self.vitesse)
             self.longitude = -(324000*2) + (self.longitude - 15)
             self.vitesse = -self.vitesse
-        #Si latitude + vitesse se trouve infenieur a 90° (il vient de depasser le Pole Sud)
+        #Si latitude + vitesse se trouve infenieur a 90 degre (il vient de depasser le Pole Sud)
         else:
             self.latitude = -(324000*2) - (self.latitude + self.vitesse)
             self.longitude = -(324000*2) + (self.longitude - 15)
@@ -78,7 +78,6 @@ class Satellite:
         #Si longitude depasse -648000" alors longitude repasse Ã  647999"
         if self.longitude < -648000:
             self.longitude = 648000 - (-self.longitude - 648000)
-        print("Latitude : " , self.latitude , "; Longitude : " , self.longitude , "; Vitesse : " , self.vitesse)
 
     def getOrientationSatellite(self):
         """
@@ -111,7 +110,8 @@ class Satellite:
         :param tour: le tour courant
         :return: [latitude pointee par le satellite,
                 longitude pointee par le satellite,
-                numero du satellite, tour courant]
+                numero du satellite,
+                tour courant]
         """
         
         ret = [4]
@@ -121,13 +121,17 @@ class Satellite:
         ret[3] = tour
         return ret
 
-    def nombrePhotoPossible(liste):
+    def nombrePhotoPossible(self, listePhoto):
         """
         Renvoie le nombre de photos qui peuvent etre prises par le satellite
         :return: le nombre de photos possibles
         """
         
-        return 0
+        ret = 0
+        for coord in listePhoto:
+            if int(int(coord[1]) < self.longitude+self.orientationMax and int(coord[1]) > self.longitude-self.orientationMax) and (int(coord[0]) > self.latitude - self.orientationMax and int(coord[0]) < self.latitude + self.orientationMax):
+                ret += 1
+        return ret
 
     def getPointageCamera():
         """
@@ -136,6 +140,14 @@ class Satellite:
         """
         
         return self.pointageLatitude, self.pointageLongitude
+    
+    def getNumero(self):
+        """
+        Retourne le numero du satellite
+        :return: le numero du satellite
+        """
+        
+        return self.numero
 
     def string(self):
         return "Latitude: ",self.latitude," Longitude: ",self.longitude," Vitesse: ",self.vitesse," Changement Orientation Max: ",self.changementOrientationMax," Orientation Max: ",self.orientationMax," Numero: ",self.numero

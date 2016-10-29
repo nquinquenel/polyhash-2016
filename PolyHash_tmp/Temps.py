@@ -1,3 +1,4 @@
+from functools import total_ordering
 class Temps:
     """
     Cette classe s occupe de gerer le temps (les tours) lors de la simulation
@@ -31,3 +32,19 @@ class Temps:
         if (self.temps >= self.tempsTotal):
             ret = True
         return ret
+
+    def getTempsActuel(self):
+        """
+        Retourne le temps actuel
+        :return: le temps actuel
+        """
+        
+        return self.temps
+    
+    def getTempsTotal(self):
+        """
+        Retourne le temps total
+        :return: le temps total
+        """
+        
+        return self.tempsTotal
