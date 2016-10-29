@@ -40,18 +40,25 @@ class Lanceur:
         """
         
         with open(self.nomFichier,'r') as f:
+            #Premiere ligne pour le temps
             self.temps = Temps(int(f.readline()))
+            #On creer les satellites
             for i in range(0, int(f.readline())):
                 coord = f.readline().split(" ")
                 self.listeSatellite.append(Satellite(int(coord[0]),int(coord[1]),float(coord[2]),int(coord[3]),int(coord[4]),i+1))
+            #Ajout des collections d images
             for i in range(0, int(f.readline())):
+                #line contient 1) Points 2) Nombre d images 3) Nombre d intervalles de temps
                 line = f.readline().split(" ")
                 images = []
                 temps = []
+                #Ajoute les coordonnees des images
                 for p in range(0, int(line[1])):
                     images.append(f.readline().strip('\n').split(" "))
+                #Ajoute les intervalles de temps
                 for p in range(0, int(line[2])):
                     temps.append(f.readline().strip('\n').split(" "))
+                #Ajoute la collection
                 self.listeCollection.append(Collection(line[0], images, temps))
                 
         """
