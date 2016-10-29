@@ -1,11 +1,11 @@
-'''
-Created on 27 oct. 2016
-
-@authors: Mathieu Soyer, Nicolas Ehresmann
-'''
-
 class Collection:
 
+    # constructeur de Collection
+    #
+    # @param valeurPoints
+    # @param listeCoordonnees
+    # @param tempsRequis
+    #
     def __init__(self,valeurPoints,listeCoordonnees=None,tempsRequis=None):
         self.listeCoordoneesReussies= []
         self.valeurPoints = valeurPoints
@@ -18,16 +18,16 @@ class Collection:
 
     def getvaleur(self):
         return self.valeurPoints
-	
+
     def getCoordonnees(self):
         return self.listeCoordonnees
 
     def getTemps(self):
         return self.tempsRequis
-    
+
     def getCoordonneesReussies(self):
         return self.getCoordonneesReussies
-			
+
     def suppressionElement(self,liste):
             self.listeCoordonnees.remove(liste)
             return estVide()
@@ -37,4 +37,3 @@ class Collection:
             return True
         else:
             return False
-   
