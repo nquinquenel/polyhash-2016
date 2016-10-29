@@ -1,12 +1,16 @@
 class Collection:
+    """
+    Cette classe gere les collections d images
+    """
 
-    # constructeur de Collection
-    #
-    # @param valeurPoints
-    # @param listeCoordonnees
-    # @param tempsRequis
-    #
     def __init__(self,valeurPoints,listeCoordonnees=None,tempsRequis=None):
+        """
+        Constructeur de Collection
+        :param valeurPoints:
+        :param listeCoordonnees:
+        :param tempsRequis:
+        """
+        
         self.listeCoordoneesReussies= []
         self.valeurPoints = valeurPoints
         if(tempsRequis != None or listeCoordonnees != None):
