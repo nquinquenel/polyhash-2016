@@ -12,7 +12,7 @@ class Lanceur:
         Constructeur de Lanceur
         :param fichier: Le fichier contenant les donnees d'entree en caracteres ASCII
         """
-        
+
         self.listeSatellite = []
         self.listeCollection = []
         self.score = 0
@@ -38,7 +38,7 @@ class Lanceur:
             longitude
             intervals de prise de vue requis
         """
-        
+
         with open(self.nomFichier,'r') as f:
             #Premiere ligne pour le temps
             self.temps = Temps(int(f.readline()))
@@ -60,7 +60,7 @@ class Lanceur:
                     temps.append(f.readline().strip('\n').split(" "))
                 #Ajoute la collection
                 self.listeCollection.append(Collection(line[0], images, temps))
-                
+
         """
         compteur = 0
         boucle = 0
@@ -128,7 +128,7 @@ class Lanceur:
                             #On rollback pour faire une autre collection
                             compteur = 4
             """
-        
+
         for i in self.listeCollection:
             print(i.string())
         for i in self.listeSatellite:
@@ -136,39 +136,39 @@ class Lanceur:
 
     def fichierSortie(self):
         """
-        Ecrit le fichier de sortie contenant;
-        le nombre de photos prises
-        pour chaque photo prise:
-            latitude du point d'interet
-            longitude du point d'interet
-            tour de la prise de vue
-            numero du satellite ayant pris la prise de vue
+        Ecrit le fichier de sortie contenant:
+            le nombre de photos prises
+            pour chaque photo prise:
+                latitude du point d'interet
+                longitude du point d'interet
+                tour de la prise de vue
+                numero du satellite ayant pris la prise de vue
         """
-        
+
         return 0
 
     def validationCollection(self):
         """
         Validation de la collection
-        :return: True si tous les points d'interet ont ete photographies 
+        :return: True si tous les points d'interet ont ete photographies
                 False sinon
         """
-        
+
         return True
 
     def lancerSimulation(self) :
         """
         Lancement de la simulation
         """
-        
-        return 0 #Pourquoi un return ?! #Parce que ca plante si y a rien dans la fonction?!
+
+        return 0 #Pourquoi un return ?! #Parce que ca plante si y a rien dans la fonction?! ..............MDR :D
 
     def getListeSatellite(self):
         """
         Accesseur - Renvoie la liste des satellites
         :return: la liste des satellites (listeSatellite)
         """
-        
+
         return self.listeSatellite
 
     def getListeCollection(self):
@@ -176,7 +176,7 @@ class Lanceur:
         Accesseur - Renvoie la liste des collections
         :return: la liste des collections (listeCollection)
         """
-        
+
         return self.listeCollection
 
 # initialisation d'un objet de type Lanceur

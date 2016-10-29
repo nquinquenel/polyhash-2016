@@ -8,7 +8,7 @@ class Temps:
         Constructeur de Temps
         :param tempsTotal: Le temps total
         """
-        
+
         # initialisation du temps a 0
         self.temps = 0
         self.tempsTotal = tempsTotal
@@ -17,7 +17,7 @@ class Temps:
         """
         Incrementation du temps
         """
-        
+
         self.temps += 1
 
     def tempsEcoule(self):
@@ -26,7 +26,7 @@ class Temps:
         :return: True si temps >= tempsTotal
                 False sinon
         """
-        
+
         ret = False
         if (self.temps >= self.tempsTotal):
             ret = True
