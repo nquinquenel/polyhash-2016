@@ -10,7 +10,9 @@ class Lanceur:
     def __init__(self,fichier):
         """
         Constructeur de Lanceur
-        :param fichier: Le fichier contenant les donnees d'entree en caracteres ASCII
+
+        :param fichier: Le chemin du fichier contenant les donnees d'entree en caracteres ASCII
+        :type fichier: string
         """
 
         self.listeSatellite = []
@@ -144,6 +146,8 @@ class Lanceur:
                 longitude du point d'interet
                 tour de la prise de vue
                 numero du satellite ayant pris la prise de vue
+
+        .. todo: A faire
         """
 
         return 0
@@ -151,8 +155,12 @@ class Lanceur:
     def validationCollection(self):
         """
         Validation de la collection
+
         :return: True si tous les points d'interet ont ete photographies
                 False sinon
+        :rtype: boolean
+
+        .. todo: A faire
         """
 
         return True
@@ -161,7 +169,7 @@ class Lanceur:
         """
         Lancement de la simulation
         """
-        
+
         while self.temps.getTempsActuel() < self.temps.getTempsTotal():
             for s in self.listeSatellite:
                 for c in self.listeCollection:
@@ -173,7 +181,9 @@ class Lanceur:
     def getListeSatellite(self):
         """
         Accesseur - Renvoie la liste des satellites
+
         :return: la liste des satellites (listeSatellite)
+        :rtype: [Satellite]
         """
 
         return self.listeSatellite
@@ -181,7 +191,9 @@ class Lanceur:
     def getListeCollection(self):
         """
         Accesseur - Renvoie la liste des collections
+        
         :return: la liste des collections (listeCollection)
+        :rtype: [Collection]
         """
 
         return self.listeCollection

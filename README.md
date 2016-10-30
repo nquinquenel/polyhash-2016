@@ -15,16 +15,17 @@ Equipe et répartition des tâches (à définir) :
         -Prendre une photo
         -Déterminer le nombres de photos possibles
         -...
-    
-    
+
+
 -SOYER Mathieu:
 
     -Gestion de la classe collection
+    -Documentation DocString
 
 -EHRESMANN Nicolas:
 
     -Gestion de la classe Satellite
-        -Calculer l'oritentation du satellite et de la camera
+        -Calculer l'orientation du satellite et de la camera
 
 -OUTHIER Arthur:
 

@@ -6,14 +6,21 @@ class Satellite:
     def __init__(self, latitude, longitude, vitesse, changementOrientationMax, orientationMax, numero):
         """
         Constructeur de Satellite
+
         :param latitude: la latitude de depart en arcsec
         :param longitude: la longitude de depart en arcsec
         :param vitesse: la vitesse de depart en arcsec
         :param changementOrientationMax: le changement d'orientation max du satellite d un tour a l autre en arcsec (0 < changementOrientationMax < 200)
         :param orientationMax: l orientation max du satellite en arcsec (0 < orientationMax < 10000)
         :param numero: le numero donne a l objet de type Satellite
+        :type latitude: int
+        :type longitude: int
+        :type vitesse: int
+        :type changementOrientationMax: int
+        :type orientationMax: int
+        :type numero: int
         """
-        
+
         self.latitude = latitude
         self.longitude = longitude
         self.vitesse = vitesse
@@ -29,9 +36,11 @@ class Satellite:
     def changerOrientationLatitude(self, valeur):
         """
         Change la valeur de l'orientation du satellite pour la latitude (deltaLatitude)
+
         :param valeur: la valeur du changement de l'orientation
+        :type valeur: int
         """
-        
+
         # |valeur| ne doit pas etre superieur changementOrientationMax
         # et ne doit pas depasser les limites de l'orientation maximum
         if valeur > self.changementOrientationMax or valeur < -self.changementOrientationMax:
@@ -44,9 +53,11 @@ class Satellite:
     def changerOrientationLongitude(self, valeur):
         """
         Change la valeur de l'orientation du satellite pour la longitude (deltaLongitude)
+
         :param valeur: La valeur du changement de l'orientation
+        :type valeur: int
         """
-        
+
         # |valeur| ne doit pas etre superieur changementOrientationMax
         # et ne doit pas depasser les limites de l'orientation maximum
         if valeur > self.changementOrientationMax or valeur < -self.changementOrientationMax:
@@ -60,7 +71,7 @@ class Satellite:
         """
         Calcul la position du satellite au tour t+1
         """
-        
+
         #Si latitude + vitesse se trouve entre -90 degre et 90 degre
         if self.latitude <= 324000 and self.latitude >= -324000:
             self.latitude = self.latitude + self.vitesse
@@ -82,24 +93,28 @@ class Satellite:
     def getOrientationSatellite(self):
         """
         Accesseur - Renvoie l'orientation du satellite
+
         :return: la valeur de l'orientation pour la latitude (deltaLatitude) et la longitude (deltaLongitude)
+        :rtype: int, int
         """
-        
+
         return self.deltaLatitude, self.deltaLongitude
 
     def getPosition(self):
         """
         Accesseur - Renvoie la position du satellite
+
         :return: la latitude et la longitude du satellite
+        :rtype:
         """
-        
+
         return self.latitude, self.longitude
 
     def calculPointageCamera(self):
         """
         Met a jour le pointage de la camera en prenant en compte l'orientation du satellite (deltaLatitude et deltaLongitude)
         """
-        
+
         self.pointageLatitude = self.latitude + self.deltaLatitude
         self.pointageLongitude = self.longitude + self.deltaLongitude
 
@@ -107,13 +122,16 @@ class Satellite:
         """
         Prend une photo du point vise par le satellite
         et renvoie les caracteristiques de l'environnement au moment de cette prise
+
         :param tour: le tour courant
+        :type tour: int
         :return: [latitude pointee par le satellite,
                 longitude pointee par le satellite,
                 numero du satellite,
                 tour courant]
+        :rtype: [int, int, int, int]
         """
-        
+
         ret = [4]
         ret[0] = self.latitude + self.deltaLatitude
         ret[1] = self.longitude + self.deltaLongitude
@@ -124,9 +142,11 @@ class Satellite:
     def nombrePhotoPossible(self, listePhoto):
         """
         Renvoie le nombre de photos qui peuvent etre prises par le satellite
+
         :return: le nombre de photos possibles
+        :rtype: int
         """
-        
+
         ret = 0
         for coord in listePhoto:
             if int(int(coord[1]) < self.longitude+self.orientationMax and int(coord[1]) > self.longitude-self.orientationMax) and (int(coord[0]) > self.latitude - self.orientationMax and int(coord[0]) < self.latitude + self.orientationMax):
@@ -136,17 +156,21 @@ class Satellite:
     def getPointageCamera():
         """
         Accesseur -  Renvoie le pointage de la camera (qui prend en compte l'orientation du satellite (deltaLatitude et deltaLongitude))
+
         :return: la latitude et la longitude du pointage de la camera
+        :rtype: int, int
         """
-        
+
         return self.pointageLatitude, self.pointageLongitude
-    
+
     def getNumero(self):
         """
         Retourne le numero du satellite
+
         :return: le numero du satellite
+        :rtype: int
         """
-        
+
         return self.numero
 
     def string(self):

@@ -7,7 +7,9 @@ class Temps:
     def __init__(self, tempsTotal):
         """
         Constructeur de Temps
+
         :param tempsTotal: Le temps total
+        :type tempsTotal: int
         """
 
         # initialisation du temps a 0
@@ -24,8 +26,10 @@ class Temps:
     def tempsEcoule(self):
         """
         Verifie si le temps est superieur (ou egal) au temps temps total
+
         :return: True si temps >= tempsTotal
                 False sinon
+        :rtype: boolean
         """
 
         ret = False
@@ -36,15 +40,19 @@ class Temps:
     def getTempsActuel(self):
         """
         Retourne le temps actuel
+
         :return: le temps actuel
+        :rtype: int
         """
-        
+
         return self.temps
-    
+
     def getTempsTotal(self):
         """
         Retourne le temps total
+
         :return: le temps total
+        :rtype: int
         """
-        
+
         return self.tempsTotal
