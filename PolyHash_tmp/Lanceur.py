@@ -149,8 +149,15 @@ class Lanceur:
 
         .. todo: A faire
         """
-
-        return 0
+        fichier = open("fichierSortie.txt", "x")
+        for collect in listeCollection:
+            if(collect.estVide()):
+                fichier.write("Collection terminee")
+            else:
+                fichier.write("Collection non terminee")
+            for  donnees in collect.listeCoordonneesReussies:    
+                fichier.write("Latitude : " + donnes[0] + ", Longitude : "+ donnes[1] + ", Tour : " + donnes[2] + ", Satelitte : " + donnes[3] + "\n")
+        fichier.close()
 
     def validationCollection(self):
         """
