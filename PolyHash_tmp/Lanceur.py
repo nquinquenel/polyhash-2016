@@ -184,6 +184,7 @@ class Lanceur:
                         print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero())
                 s.calculePosition()
             self.temps.incrementer()
+        fichierSortie()
 
     def getListeSatellite(self):
         """
