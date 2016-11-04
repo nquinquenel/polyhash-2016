@@ -149,13 +149,13 @@ class Lanceur:
 
         .. todo: A faire
         """
-        fichier = open("fichierSortie.txt", "x")
-        for collect in listeCollection:
+        fichier = open("fichierSortie.txt", "w")
+        for collect in self.listeCollection:
             if(collect.estVide()):
                 fichier.write("Collection terminee")
             else:
                 fichier.write("Collection non terminee")
-            for  donnees in collect.listeCoordonneesReussies:    
+            for  donnees in collect.listeCoordonneesReussies:
                 fichier.write("Latitude : " + donnes[0] + ", Longitude : "+ donnes[1] + ", Tour : " + donnes[2] + ", Satelitte : " + donnes[3] + "\n")
         fichier.close()
 
@@ -184,7 +184,7 @@ class Lanceur:
                         print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero())
                 s.calculePosition()
             self.temps.incrementer()
-        fichierSortie()
+        self.fichierSortie()
 
     def getListeSatellite(self):
         """
@@ -199,7 +199,7 @@ class Lanceur:
     def getListeCollection(self):
         """
         Accesseur - Renvoie la liste des collections
-        
+
         :return: la liste des collections (listeCollection)
         :rtype: [Collection]
         """
