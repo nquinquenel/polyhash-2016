@@ -131,9 +131,12 @@ class Lanceur:
                             #On rollback pour faire une autre collection
                             compteur = 4
             """
-
+        print()
+        print("Les collections : ")
         for i in self.listeCollection:
             print(i.string())
+        print()
+        print("Les satellites : ")
         for i in self.listeSatellite:
             print(i.string())
 
@@ -177,11 +180,17 @@ class Lanceur:
         Lancement de la simulation
         """
 
+        print()
+        print("Lancement de la simulation")
         while self.temps.getTempsActuel() < self.temps.getTempsTotal():
             for s in self.listeSatellite:
                 for c in self.listeCollection:
                     if s.nombrePhotoPossible(c.getCoordonnees()) > 0:
                         print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero())
+                        '''
+                            TODO: supprimer les coordonnees pouvant etre prise ne photo de listeCoordonnees
+                                et les rajouter dans listeCoordonneesReussies
+                        '''
                 s.calculePosition()
             self.temps.incrementer()
         self.fichierSortie()

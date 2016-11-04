@@ -143,6 +143,8 @@ class Satellite:
         """
         Renvoie le nombre de photos qui peuvent etre prises par le satellite
 
+        :param listePhoto: la liste des coordonnees des points d'interet d'une collection
+        :type listePhoto: [[int, int]]
         :return: le nombre de photos possibles
         :rtype: int
         """
@@ -153,7 +155,7 @@ class Satellite:
                 ret += 1
         return ret
 
-    def getPointageCamera():
+    def getPointageCamera(self):
         """
         Accesseur -  Renvoie le pointage de la camera (qui prend en compte l'orientation du satellite (deltaLatitude et deltaLongitude))
 
