@@ -168,7 +168,7 @@ class Satellite:
 
         if int(int(coord[1]) < self.longitude+self.orientationMax and int(coord[1]) > self.longitude-self.orientationMax) and (int(coord[0]) > self.latitude - self.orientationMax and int(coord[0]) < self.latitude + self.orientationMax):
             return True
-        return return False
+        return False
 
     def getPointageCamera(self):
         """
