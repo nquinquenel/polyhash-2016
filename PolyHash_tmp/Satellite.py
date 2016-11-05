@@ -155,6 +155,21 @@ class Satellite:
                 ret += 1
         return ret
 
+    def photoPossible(self, coord):
+        """
+        Verifie si la photo peut être prise par le satellite
+
+        :param coord: les coordonnees d'un point d'interet
+        :type coord: [int, int]
+        :return: True si la photo peut etre prise
+                False sinon
+        :rtype: boolean
+        """
+
+        if int(int(coord[1]) < self.longitude+self.orientationMax and int(coord[1]) > self.longitude-self.orientationMax) and (int(coord[0]) > self.latitude - self.orientationMax and int(coord[0]) < self.latitude + self.orientationMax):
+            return True
+        return return False
+
     def getPointageCamera(self):
         """
         Accesseur -  Renvoie le pointage de la camera (qui prend en compte l'orientation du satellite (deltaLatitude et deltaLongitude))
