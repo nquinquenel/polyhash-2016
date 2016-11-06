@@ -17,6 +17,8 @@ class Lanceur:
 
         self.listeSatellite = []
         self.listeCollection = []
+        # la liste de toutes les coordonnees de toutes les collections triees (par latitude croissante, si meme latitude par longitude decroissante)
+        self.listeCoordonneesTriees = []
         self.score = 0
         self.temps = None
         self.nomFichier = fichier
@@ -58,11 +60,19 @@ class Lanceur:
                 #Ajoute les coordonnees des images
                 for p in range(0, int(line[1])):
                     images.append(f.readline().strip('\n').split(" "))
+                    #Parcours de images pour initialiser listeCoordonneesTriees
+                    for coord in images:
+                        #Si la coordonnees n'est pas deja dans listeCoordonneesTriees, alors on l'ajoute
+                        if(coord not in self.listeCoordonneesTriees):
+                            self.listeCoordonneesTriees.append(coord)
                 #Ajoute les intervalles de temps
                 for p in range(0, int(line[2])):
                     temps.append(f.readline().strip('\n').split(" "))
                 #Ajoute la collection
                 self.listeCollection.append(Collection(line[0], images, temps))
+            #Tri par latitude croissante et, si meme latitude par longitude decroissante
+            self.trierListeCoordonneesTriees()
+
 
         """
         compteur = 0
@@ -162,6 +172,16 @@ class Lanceur:
                 fichier.write("Latitude : " + donnes[0] + ", Longitude : "+ donnes[1] + ", Tour : " + donnes[2] + ", Satelitte : " + donnes[3] + "\n")
         fichier.close()
 
+    """
+    Tri de listeCoordonneesTriees
+    Les coordonnees sont triees par latitude croissante et, par longitude decroissante pour les coordonnees ayant la meme latitude
+    """
+    def trierListeCoordonneesTriees(self):
+        #Tri par longitude decroissante
+        self.listeCoordonneesTriees.sort(key=lambda x: x[1], reverse = True)
+        #Puis tri par latitude croissante
+        self.listeCoordonneesTriees.sort(key=lambda x: x[0])
+
     def validationCollection(self):
         """
         Validation de la collection
@@ -181,7 +201,7 @@ class Lanceur:
         """
 
         print()
-        print("Lancement de la simulation")
+        print("Lancement de la simulation :")
         while self.temps.getTempsActuel() < self.temps.getTempsTotal():
             for s in self.listeSatellite:
                 for c in self.listeCollection:
