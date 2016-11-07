@@ -17,6 +17,7 @@ class Lanceur:
 
         self.listeSatellite = []
         self.listeCollection = []
+        self.listePhotosPossibles = []
         # la liste de toutes les coordonnees de toutes les collections triees (par latitude croissante, si meme latitude par longitude decroissante)
         self.listeCoordonneesTriees = []
         self.score = 0
@@ -72,6 +73,9 @@ class Lanceur:
                 self.listeCollection.append(Collection(line[0], images, temps))
             #Tri par latitude croissante et, si meme latitude par longitude decroissante
             self.trierListeCoordonneesTriees()
+            #Initialise la liste des photos sur la trajectoire des satellites
+            """self.initialiserListePhotosPossibles()"""
+
 
 
         """
@@ -181,6 +185,13 @@ class Lanceur:
         self.listeCoordonneesTriees.sort(key=lambda x: x[1], reverse = True)
         #Puis tri par latitude croissante
         self.listeCoordonneesTriees.sort(key=lambda x: x[0])
+        print("listeCoordonneesTriees", self.listeCoordonneesTriees)
+
+    """
+    def initialiserListePhotosPossibles(self):
+        for satellite in self.listeSatellite:
+            print(satellite.getPosition())
+    """
 
     def validationCollection(self):
         """
@@ -204,9 +215,10 @@ class Lanceur:
         print("Lancement de la simulation :")
         while self.temps.getTempsActuel() < self.temps.getTempsTotal():
             for s in self.listeSatellite:
-                for c in self.listeCollection:
-                    if s.nombrePhotoPossible(c.getCoordonnees()) > 0:
-                        print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero())
+                for c in self.listeCoordonneesTriees:
+                    #Si la photo est sur la trajectoire du satellite
+                    if s.photoPossible(c) == True:
+                        print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",c)
                         '''
                             TODO: supprimer les coordonnees pouvant etre prise ne photo de listeCoordonnees
                                 et les rajouter dans listeCoordonneesReussies
