@@ -132,7 +132,7 @@ class Satellite:
         :rtype: [int, int, int, int]
         """
 
-        ret = [4]
+        ret = [0]*4
         ret[0] = self.latitude + self.deltaLatitude
         ret[1] = self.longitude + self.deltaLongitude
         ret[2] = self.numero

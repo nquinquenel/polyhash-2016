@@ -204,8 +204,10 @@ class Lanceur:
         .. todo: A faire
         """
 
-        return True
-
+	if len(self.listeCoordonneesTriees)==0:
+		return True
+	else:
+		return False
     def lancerSimulation(self) :
         """
         Lancement de la simulation
