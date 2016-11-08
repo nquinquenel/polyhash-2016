@@ -125,7 +125,7 @@ class Lanceur:
                     liste[1] = float(liste[1])
                     print(liste)
                     collection.getCoordonnees().append(liste)
-                    boucle2 -= 1
+                    bouclteste2 -= 1
                     if(boucle2 == 0):
                         compteur += 1
                     #Delais de temps
@@ -203,11 +203,10 @@ class Lanceur:
 
         .. todo: A faire
         """
-
-	if len(self.listeCoordonneesTriees)==0:
-		return True
-	else:
-		return False
+        if len(self.listeCoordonneesTriees)==0:
+            return True
+        else:
+            return False
     def lancerSimulation(self) :
         """
         Lancement de la simulation
