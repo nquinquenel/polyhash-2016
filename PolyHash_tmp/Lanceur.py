@@ -193,6 +193,9 @@ class Lanceur:
             print(satellite.getPosition())
     """
 
+	
+
+
     def validationCollection(self):
         """
         Validation de la collection
@@ -202,6 +205,7 @@ class Lanceur:
         :rtype: boolean
 
         .. todo: A faire
+	utilite de la methode?
         """
         if len(self.listeCoordonneesTriees)==0:
             return True
