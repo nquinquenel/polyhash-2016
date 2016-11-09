@@ -60,7 +60,7 @@ class Lanceur:
                 temps = []
                 #Ajoute les coordonnees des images
                 for p in range(0, int(line[1])):
-                    images.append(f.readline().strip('\n').split(" "))
+                    images.append([int(j) for j in f.readline().strip('\n').split(" ")])
                     #Parcours de images pour initialiser listeCoordonneesTriees
                     for coord in images:
                         #Si la coordonnees n'est pas deja dans listeCoordonneesTriees, alors on l'ajoute
