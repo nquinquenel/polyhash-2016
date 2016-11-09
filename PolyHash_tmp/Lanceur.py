@@ -104,7 +104,8 @@ class Lanceur:
             else:
                 fichier.write("Collection non terminee")
             for  donnees in collect.listeCoordonneesReussies:
-                fichier.write("Latitude : " + donnes[0] + ", Longitude : "+ donnes[1] + ", Tour : " + donnes[2] + ", Satelitte : " + donnes[3] + "\n")
+                print("dans fichierSortie()")
+                #fichier.write("Latitude : " + str(donnees[0]) + ", Longitude : "+ str(donnees[1]) + ", Tour : " + str(donnees[2]) + ", Satelitte : " + str(donnees[3]) + "\n")
         fichier.close()
 
     """
@@ -146,16 +147,24 @@ class Lanceur:
         print()
         print("Lancement de la simulation :")
         while self.temps.getTempsActuel() < self.temps.getTempsTotal():
+            #Test si les photos peuvent etre prises
+            #Pour chaque collection
+            for c in self.listeCollection:
+                #Pour chaque coordonnees non prises en photo
+                for coord in c.getCoordonnees():
+                    #Pour chaque satellite
+                    for s in self.listeSatellite:
+                        #Si la photo est sur la trajectoire du satellite
+                        if s.photoPossible(coord) == True:
+                            #On supprime les coordonnees de la photo prise de toutes les collections
+                            for c2 in self.listeCollection:
+                                c2.suppressionElement(coord)
+                            print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",coord)
+                            c.suppressionElement(coord)
+            #MAJ de la position des satellites
             for s in self.listeSatellite:
-                for c in self.listeCoordonneesTriees:
-                    #Si la photo est sur la trajectoire du satellite
-                    if s.photoPossible(c) == True:
-                        print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",c)
-                        '''
-                            TODO: supprimer les coordonnees pouvant etre prise ne photo de listeCoordonnees
-                                et les rajouter dans listeCoordonneesReussies
-                        '''
                 s.calculePosition()
+            #Passage au tour suivant
             self.temps.incrementer()
         self.fichierSortie()
 
