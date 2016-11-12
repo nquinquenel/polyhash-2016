@@ -1,15 +1,4 @@
-La structure du projet a été défini (mais peut être sujet à changement).
+12/11/2016
 
-Dans le répertoire PolyHash_tmp se trouve actuellement le projet. Il y a cependant une organisation à respecter (main.py, polyhmodel.py,
-polyhsolver.py etc.), il sera donc nécessaire de la respecter.
-
-Ce qui a été fait : 
-
--Mise en place de la structure
--Classe Temps O.K.
--Calcul de la trajectoire d'un satellite
--Instanciation de toutes les classes possible
-
-Ce qui reste à faire :
-
--Quasiment tout (toutes les méthodes qui n'ont pas été définies)
+Première version fonctionnelle.
+Ajout d'une méthode changerOrientatation(coord) qui s'occupe de diriger l'orientation de la caméra vers la coordonnée (en respectant les limites).
