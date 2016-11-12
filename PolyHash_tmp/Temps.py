@@ -37,6 +37,13 @@ class Temps:
             ret = True
         return ret
 
+    def resetTemps(self):
+        """
+        Reinitialise le temps a 0
+        """
+
+        self.temps = 0
+
     def getTempsActuel(self):
         """
         Retourne le temps actuel
