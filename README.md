@@ -6,27 +6,32 @@ de points d'intérêt à photographier, de sorte à maximiser le nombre d'images
 
 ===========
 
-Equipe et répartition des tâches (à définir) :
+Equipe et répartition des tâches(non exhaustive) :
 
 
 -QUINQUENEL Nicolas:
 
-    -Gestion de la classe Camera
+    -Gestion de la classe Satellite
+        -Changement d'orientation
+        -Gestion des attributs du salitte (orientation, delta, pointage etc.)
         -Prendre une photo
-        -Déterminer le nombres de photos possibles
-        -...
+        -Déterminer les photos possibles à prendre actuellement sous le satellite
+    -Création de la première version du programme principal
+    -Aide au développement de la lecture du fichier
+    -Aide à la documentation
 
 
 -SOYER Mathieu:
 
-    -Gestion de la classe collection
+    -Gestion de la classe Collection
     -Documentation DocString
 
 -EHRESMANN Nicolas:
 
-    -Gestion de la classe Satellite
-        -Calculer l'orientation du satellite et de la camera
+    -?
 
 -OUTHIER Arthur:
 
     -Entrées/Sorties
+    -Conception et analyse du projet (diagramme de classe)
+    -Gestion de la classe Temps
