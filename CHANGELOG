@@ -2,3 +2,39 @@
 
 Première version fonctionnelle.
 Ajout d'une méthode changerOrientatation(coord) qui s'occupe de diriger l'orientation de la caméra vers la coordonnée (en respectant les limites).
+
+Fonctionnement de l'algorithme :
+
+1ère étape :
+
+Pour chaque satellite, je créer un tableau qui contient toutes les coordonnées qu'il peut croiser (je fais une simulation une première fois pour ça, à chaque tour il parcours toutes les coords pour chaque satellite pour voir s'il peut la prendre, c'est ici que ça prend vachement de temps)
+
+A ce point là, j'ai un tableau pour chaque satellite remplit de toutes les coordonnées qu'il peut avoir et c'est trier dans l'ordre (vu que remplit dans l'ordre)
+
+2ème étape : 
+
+Je vais ici décider des chemins que le satellite devra prendre.
+
+Mon premier satellite prendra le premier point GPS qu'il possède dans sa liste, je vais ensuite check toutes les autres listes des autres satellites pour supprimer ce point GPS (les autres satellites ne pourront pas prendre ce point).
+Ensuite je passe au deuxième satellite qui prend lui aussi son premier point GPS, et il compare avec les autres pour supprimer et ainsi de suite.
+Après on prend le point juste en haut et ainsi de suite.
+
+A partir d'ici, chaque satellite a un chemin composé de point GPS unique.
+
+3ème étape :
+
+Je lance la simulation pour de vrai. Le point le plus proche sera toujours le point [0] dans la liste. Donc j'ai une méthode changerOrientation(coord) qui s'occupe de se diriger automatiquement vers ce point là à chaque tour. Dès que j'arrive dessus, je le supprime de la liste et je prends le suivant.
+
+Fin du programme, exemple de résultat : 
+
+Lancement de la simulation :
+Part 1 done
+Part 2 done
+Part 3 done
+Part 4 done
+[[[99590, -287544], [107307, -293795], [122499, -293630]]]
+Total avant :  3
+Tour :  373  Satellite :  0  Coordonnees pt d'interet:  [99590, -287544]
+Tour :  439  Satellite :  0  Coordonnees pt d'interet:  [107307, -293795]
+Tour :  569  Satellite :  0  Coordonnees pt d'interet:  [122499, -293630]
+Total apres :  0
