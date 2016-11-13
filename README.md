@@ -13,6 +13,7 @@ Equipe et répartition des tâches(non exhaustive) :
 
     -Gestion de la classe Satellite
         -Changement d'orientation
+        -Calcul de la trajectoire
         -Gestion des attributs du salitte (orientation, delta, pointage etc.)
         -Prendre une photo
         -Déterminer les photos possibles à prendre actuellement sous le satellite
