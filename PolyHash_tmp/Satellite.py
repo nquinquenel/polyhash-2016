@@ -37,7 +37,7 @@ class Satellite:
         #Si coord latitude est au nord du pointage de la camera
         if coord[0] > self.pointageLatitude and self.deltaLatitude < self.orientationMax:
             if self.pointageLatitude + self.changementOrientationMax > coord[0]:
-                self.changerOrientationLatitude(coord[0] - self.pointageLatitude)
+                self.changerOrientationLatitude((self.pointageLatitude+self.changementOrientationMax) - coord[0])
             else:
                 if self.deltaLatitude + self.changementOrientationMax > self.orientationMax:
                     self.changerOrientationLatitude(self.orientationMax - self.deltaLatitude)
@@ -47,7 +47,10 @@ class Satellite:
         elif coord[0] < self.pointageLatitude and self.deltaLatitude > -self.orientationMax:
             #Si en descendant la camera du changement Max on depasse (passe en dessous) de coord lati
             if self.pointageLatitude - self.changementOrientationMax <= coord[0]:
-                self.changerOrientationLatitude(coord[0] + self.pointageLatitude)
+                if self.deltaLatitude > 0:
+                    self.changerOrientationLatitude(self.pointageLatitude - self.changementOrientationMax - coord[0])
+                else:
+                    self.changerOrientationLatitude(coord[0] - (self.pointageLatitude - self.changementOrientationMax))
             #Si on reste au dessus
             else:
                 #Si en bougeant on ne depasse pas l orientation max de la camera
@@ -73,7 +76,10 @@ class Satellite:
         elif coord[1] < self.pointageLongitude and self.deltaLongitude > -self.orientationMax:
             #Si en allant a gauche on depasse la coord longi
             if self.pointageLongitude - self.changementOrientationMax <= coord[1]:
-                self.changerOrientationLongitude((self.pointageLongitude - self.changementOrientationMax) - coord[1])
+                if self.deltaLongitude > 0:
+                    self.changerOrientationLongitude((self.pointageLongitude - self.changementOrientationMax) - coord[1])
+                else:
+                    self.changerOrientationLongitude(-(self.pointageLongitude - self.changementOrientationMax) + coord[1])
             #Si on reste a l est
             else:
                 #Si en bougeant on ne depasse pas l orientation max
