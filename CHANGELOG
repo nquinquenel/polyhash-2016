@@ -38,3 +38,21 @@ Tour :  373  Satellite :  0  Coordonnees pt d'interet:  [99590, -287544]
 Tour :  439  Satellite :  0  Coordonnees pt d'interet:  [107307, -293795]
 Tour :  569  Satellite :  0  Coordonnees pt d'interet:  [122499, -293630]
 Total apres :  0
+
+_______________
+
+UPDATE :
+
+Nouvelle méthode en cours de construction.
+La planète peut être vu comme un rectangle (-648000W 648000E 324000N -324000S). La trajectoire d'un satellite peut donc être représenté par des polygones (des
+quadrilatères qui continnent la tracjectoire d'un satellite), il peut y en avoir plusieurs pour un satellite lorsqu'il dépasse un des pôles.
+Cette méthode marche, mais manque d'optimisation quand on s'approche d'un pôle avec la longitude (au lieu de faire un pas de +15, il faudrait faire en sorte
+de bouger au bon endroit) pour éviter les erreurs dans la suite.
+
+Avec ces aires, on peut comparer chaque point avec les polygones et vérifier s'ils sont devant ou non, la complexité est beaucoup plus réduite.
+Pour voir si un point est dans un polygone, je calcule l'aire de chaque triangles (du point à vérif à un segment du polygone), si l'aire des 4 triangles
+et plus grande est celle du quadrilatère alors il n'est pas dedans, si c'est égal alors il est dedans.
+Le problème d'avant fait que l'aire du polygone n'est pas exactement la bonne, et donc que ce n'est jamais égal. De plus, c'est possible qu'il y ai des erreurs
+d'approximations avec les divions ou racines carrées.
+
+La comparaison d'aire a été faite mais les valeurs ne sont pas très justes.
