@@ -91,6 +91,75 @@ class Satellite:
                     else:
                         self.changerOrientationLongitude(-(self.orientationMax + self.deltaLongitude))
 
+    def getPolygone(self, tempsTotal):
+        res = []
+        latTmp = self.latitude
+        longTmp = self.longitude
+        totalDistance = self.vitesse * tempsTotal
+        disLat = 0
+        first = True
+        tab = []
+        while totalDistance != 0:
+            if first:
+                if (self.vitesse > 0):
+                    p1 = [self.latitude-self.orientationMax, self.longitude-self.orientationMax]
+                    p2 = [self.latitude-self.orientationMax, self.longitude+self.orientationMax]
+                else:
+                    p1 = [self.latitude+self.orientationMax, self.longitude-self.orientationMax]
+                    p2 = [self.latitude+self.orientationMax, self.longitude+self.orientationMax]
+                first = False
+            else:
+                if (self.vitesse > 0):
+                    p1 = [-324000, longTmp-self.orientationMax]
+                    p2 = [-324000, longTmp+self.orientationMax]
+                else:
+                    p1 = [324000, longTmp-self.orientationMax]
+                    p2 = [324000, longTmp+self.orientationMax]
+            tab.append(p1)
+            tab.append(p2)
+            #Si le satellite va vers le haut
+            if (self.vitesse > 0):
+                disLat = 324000 - latTmp
+                #Si on peut faire 1 tour
+                if (totalDistance > disLat):
+                    posLong = self.longitude - (15 * disLat/self.vitesse)
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [324000, posLong-self.orientationMax]
+                    p4 = [324000, posLong+self.orientationMax]
+                    totalDistance = totalDistance - disLat
+                    longTmp = posLong
+                    latTmp = -324000
+                else:
+                    posLong = longTmp - (15 * (totalDistance/self.vitesse))
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [latTmp + totalDistance, posLong-self.orientationMax]
+                    p4 = [latTmp + totalDistance, posLong+self.orientationMax]
+                    totalDistance = 0
+            #Si le satellite va vers le bas
+            else:
+                disLat = -324000 - latTmp
+                #Si on peut faire 1 tour
+                if (totalDistance < disLat):
+                    posLong = self.longitude - (15 * abs(disLat)/-self.vitesse)
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [-324000, posLong-self.orientationMax]
+                    p4 = [-324000, posLong+self.orientationMax]
+                    totalDistance = totalDistance - disLat
+                    longTmp = posLong
+                    latTmp = 324000
+                else:
+                    posLong = longTmp - (15 * (abs(totalDistance)/-self.vitesse))
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [latTmp + totalDistance, posLong-self.orientationMax]
+                    p4 = [latTmp + totalDistance, posLong+self.orientationMax]
+                    totalDistance = 0
+            tab.append(p3)
+            tab.append(p4)
+        return tab
 
     def changerOrientationLatitude(self, valeur):
         """

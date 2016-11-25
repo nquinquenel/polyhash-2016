@@ -2,6 +2,7 @@ from Temps import Temps
 from Collection import Collection
 from Satellite import Satellite
 import copy
+import math
 
 class Lanceur:
     """
@@ -144,9 +145,43 @@ class Lanceur:
         """
         Lancement de la simulation
         """
-
+        
         print()
         print("Lancement de la simulation :")
+
+        tabPointsSat = []
+
+        for sat in self.listeSatellite:
+            polygone = sat.getPolygone(self.temps.getTempsTotal())
+            p = 0
+            aires = []
+            while (p < len(polygone)):
+                aire = (1/2)*abs(((polygone[p+0][0]*polygone[p+1][1])+(polygone[p+3][0]*polygone[p+0][1])-(polygone[p+1][0]*polygone[p+0][1])-(polygone[p+2][0]*polygone[p+1][1])-(polygone[p+3][0]*polygone[p+2][1])-(polygone[p+1][0]*polygone[p+2][1])+(polygone[p+2][0]*polygone[p+3][1])+(polygone[p+0][0]*polygone[p+3][1])))
+                aires.append(aire)
+                p = p + 4
+            print(aires)
+            for coord in self.listeCoordonneesTriees:
+                i = 0
+                aireCoord = 0
+                while (i < len(polygone)):
+                    v = 0
+                    while (v < 3):
+                        distA = math.sqrt((coord[0]-polygone[i+v][0])**2+(coord[1]-polygone[i+v][1])**2)
+                        distB = math.sqrt((coord[0]-polygone[i+v+1][0])**2+(coord[1]-polygone[i+v+1][1])**2)
+                        dist2Points = math.sqrt((polygone[i+v+1][0]-polygone[i+v][0])**2+(polygone[i+v][1]-polygone[i+v+1][1])**2)
+                        aireCoord += (1/4)*math.sqrt((distA+dist2Points+distB)*(-distA+dist2Points+distB)*(distA-dist2Points+distB)*(distA+dist2Points-distB))
+                        v = v + 1
+                    distA = math.sqrt((coord[0]-polygone[i][0])**2+(coord[1]-polygone[i][1])**2)
+                    distB = math.sqrt((coord[0]-polygone[i+3][0])**2+(coord[1]-polygone[i+3][1])**2)
+                    aireCoord += math.sqrt((polygone[i+3][0]-polygone[i][0])**2+(polygone[i+3][1]-polygone[i][1])**2)
+                    
+                    for ai in aires:
+                        print(ai)
+                        print(aireCoord)
+                        print()
+                    i = i + 4
+
+        """
         tabPointsSat = [[]]*len(self.listeSatellite)
         tabPointsSatFinal = [[]]*len(self.listeSatellite)
         satClone = copy.deepcopy(self.listeSatellite)
@@ -184,7 +219,7 @@ class Lanceur:
             tabPointsSatFinal = tabPointsSat
 
         print("Part 3 done")
-
+        """
         """
         for sat in self.listeSatellite:
             lati, longi = sat.getPosition()
@@ -202,7 +237,7 @@ class Lanceur:
                 else:
                     trier = True
         """
-
+        """
         self.temps.resetTemps()
 
         print("Part 4 done")
@@ -222,7 +257,7 @@ class Lanceur:
             self.temps.incrementer()
 
         print("Total : ", len(tabPointsSatFinal[0]))
-                        
+        """  
         """
             #Test si les photos peuvent etre prises
             #Pour chaque collection
