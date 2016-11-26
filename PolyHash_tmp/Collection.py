@@ -15,7 +15,7 @@ class Collection:
         :type tempsRequis: int
         """
 
-        self.listeCoordonneesReussies= []
+        self.listeCoordonneesReussies = []
         self.valeurPoints = valeurPoints
         if(tempsRequis != None or listeCoordonnees != None):
             self.listeCoordonnees = listeCoordonnees
@@ -59,7 +59,7 @@ class Collection:
         Accesseur - Renvoie la liste des coordonnees photographiees parmi la liste des coordonnees des points d'interet de la collection (listeCoordonnees)
 
         :return: la liste des coordonnees photographiees (listeCoordonneesReussies)
-        :rtype: [[int, int]]
+        :rtype: [[int, int, int, int]]
         """
 
         return self.listeCoordonneesReussies
