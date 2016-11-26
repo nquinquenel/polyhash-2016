@@ -64,6 +64,18 @@ class Collection:
 
         return self.listeCoordonneesReussies
 
+    def ajouteElementCoordonneesReussies(self,donnees):
+        self.listeCoordonneesReussies.append(donnees)
+
+    def fusionDonnees(self,coord,tour,numSatellite):
+        coord.append(tour)
+        coord.append(numSatellite)
+        return coord
+        
+    def prisePhoto(self,coord,tour,numSatellite):
+        self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
+        return self.suppressionElement(coord)
+    
     def suppressionElement(self,coord):
         """
         Supprime les coordonnees du point potographie de listeCoordonnees et les rajoute dans listeCoordonneesReussies
@@ -78,11 +90,9 @@ class Collection:
         try:
             # suppression de liste a listeCoordonnees
             self.listeCoordonnees.remove(coord)
-            # ajout de liste a listeCoordonneesReussies
-            self.listeCoordonneesReussies.append(coord)
             return self.estVide()
         except ValueError:
-            return self.estVide()
+            return self.estVide() #interet de faire ça ?
 
     def estVide(self):
         """
