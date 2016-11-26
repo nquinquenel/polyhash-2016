@@ -34,6 +34,12 @@ class Satellite:
         self.numero = numero
 
     def changerOrientation(self, coord):
+        """
+        Change l'orientation de la camera du satellite en fonction du prochain point a photographier
+
+        :param coord: les coordonnees du prochain point a photographier
+        :type coord: [int, int]
+        """
         #Si coord latitude est au nord du pointage de la camera
         if coord[0] > self.pointageLatitude and self.deltaLatitude < self.orientationMax:
             if self.pointageLatitude + self.changementOrientationMax > coord[0]:
@@ -92,6 +98,14 @@ class Satellite:
                         self.changerOrientationLongitude(-(self.orientationMax + self.deltaLongitude))
 
     def getPolygone(self, tempsTotal):
+        """
+        Renvoie le polygone du satellite qui correspond a son projete sur Terre pendant la duree de la simulation
+
+        :param tempsTotal: le temps total de la conversation
+        :type tempsTotal: int
+        :return: le polygone du satellite
+        :rtype: [int]
+        """
         res = []
         latTmp = self.latitude
         longTmp = self.longitude
@@ -322,4 +336,10 @@ class Satellite:
         return self.numero
 
     def string(self):
+        """
+        Simple methode d'impression qui renvoie les informations de l'objet de type Satellite
+
+        :return: la latitude, la longitude, la vitesse, le changement d'orientation maximum de la camera, l'orientation maximum de la camera et le numero du satellite
+        :rtype: string
+        """
         return "Latitude: ",self.latitude," Longitude: ",self.longitude," Vitesse: ",self.vitesse," Changement Orientation Max: ",self.changementOrientationMax," Orientation Max: ",self.orientationMax," Numero: ",self.numero
