@@ -29,7 +29,8 @@ Equipe et répartition des tâches(non exhaustive) :
 
 -EHRESMANN Nicolas:
 
-    -?
+    -Interface Graphique
+    -Aide à la documentation
 
 -OUTHIER Arthur:
 

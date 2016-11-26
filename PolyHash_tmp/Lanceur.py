@@ -100,14 +100,17 @@ class Lanceur:
         .. todo: A faire
         """
         fichier = open("fichierSortie.txt", "w")
+        nombrePhotos = 0
+        stockage = ""
         for collect in self.listeCollection:
-            if(collect.estVide()):
-                fichier.write("Collection terminee")
-            else:
-                fichier.write("Collection non terminee")
-            for  donnees in collect.listeCoordonneesReussies:
-                print("dans fichierSortie()")
-                #fichier.write("Latitude : " + str(donnees[0]) + ", Longitude : "+ str(donnees[1]) + ", Tour : " + str(donnees[2]) + ", Satelitte : " + str(donnees[3]) + "\n")
+            if(len(collect.getCoordonneesReussies()) != 0):
+                taille = len(collect.getCoordonneesReussies())
+                nombrePhotos += taille
+                print(nombrePhotos)
+                for donnees in collect.getCoordonneesReussies():   
+                    stockage += str(donnees[0])+ " " + str(donnees[1]) + " " + str(donnees[2]) + " " + str(donnees[3]) + "\n"
+        fichier.write(str(nombrePhotos)+"\n")
+        fichier.write(stockage)
         fichier.close()
 
     """
@@ -145,6 +148,7 @@ class Lanceur:
             return True
         else:
             return False
+
     def lancerSimulation(self) :
         """
         Lancement de la simulation
