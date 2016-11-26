@@ -1,6 +1,8 @@
 from Temps import Temps
 from Collection import Collection
 from Satellite import Satellite
+import copy
+import math
 
 class Lanceur:
     """
@@ -60,7 +62,7 @@ class Lanceur:
                 temps = []
                 #Ajoute les coordonnees des images
                 for p in range(0, int(line[1])):
-                    images.append(f.readline().strip('\n').split(" "))
+                    images.append([int(j) for j in f.readline().strip('\n').split(" ")])
                     #Parcours de images pour initialiser listeCoordonneesTriees
                     for coord in images:
                         #Si la coordonnees n'est pas deja dans listeCoordonneesTriees, alors on l'ajoute
@@ -75,76 +77,7 @@ class Lanceur:
             self.trierListeCoordonneesTriees()
             #Initialise la liste des photos sur la trajectoire des satellites
             """self.initialiserListePhotosPossibles()"""
-
-
-
-        """
-        compteur = 0
-        boucle = 0
-        collection = None
-        boucle2 = 0
-        boucle3 = 0
-        with open(self.nomFichier,'r') as f:
-            for ligne in f:
-                #Initialisation du temps de la simulation
-                if(compteur == 0):
-                    self.temps = Temps(int(ligne))
-                    print(str(ligne) + ": temps de la simulation")
-                    compteur += 1
-                #Nombre de satellites
-                elif(compteur == 1):
-                    boucle = int(ligne)
-                    print(str(ligne) + ": nombre de satellites")
-                    compteur += 1
-                #Decoupage des satellites
-                elif(compteur == 2):
-                    coord = ligne.split(" ")
-                    print(str(coord[0])+ "," + str(coord[1]) + "," + str(coord[2]) + "," + str(coord[3]) + "," + str(coord[4]) + ": nouveau satelitte")
-                    self.listeSatellite.append(Satellite(float(coord[0]),float(coord[1]),int(coord[2]),float(coord[3]),float(coord[4]),boucle))
-                    boucle -= 1
-                    if(boucle == 0):
-                        compteur += 1
-                #Nombre de collections
-                elif(compteur == 3):
-                    boucle = int(ligne)
-                    print(str(ligne) + ": nombre de collections")
-                    compteur += 1
-                #Decoupage de collections
-                elif(compteur == 4):
-                    value = ligne.split(" ")
-                    print(value[0] + ": Score de la collection, " + value[1] + ": Nombre d'images, " + value[2] + ": Nombre de conditions")
-                    boucle2 = int(value[1])
-                    boucle3 = int(value[2])
-                    collection = Collection(int(value[0]))
-                    self.getListeCollection().append(collection)
-                    compteur += 1
-                #Repartition des coordonnees
-                elif(compteur == 5):
-                    liste = ligne.split(" ")
-                    liste[0] = float(liste[0])
-                    liste[1] = float(liste[1])
-                    print(liste)
-                    collection.getCoordonnees().append(liste)
-                    bouclteste2 -= 1
-                    if(boucle2 == 0):
-                        compteur += 1
-                    #Delais de temps
-                elif(compteur == 6):
-                    liste = ligne.split(" ")
-                    liste[0] = float(liste[0])
-                    liste[1] = float(liste[1])
-                    print(liste)
-                    collection.getTemps().append(liste)
-                    boucle3 -= 1
-                    boucle -= 1
-                    if(boucle3 == 0):
-                        if(boucle == 0):
-                            f.close()
-                            break
-                        else:
-                            #On rollback pour faire une autre collection
-                            compteur = 4
-            """
+    """
         print()
         print("Les collections : ")
         for i in self.listeCollection:
@@ -153,7 +86,7 @@ class Lanceur:
         print("Les satellites : ")
         for i in self.listeSatellite:
             print(i.string())
-
+    """
     def fichierSortie(self):
         """
         Ecrit le fichier de sortie contenant:
@@ -173,7 +106,8 @@ class Lanceur:
             else:
                 fichier.write("Collection non terminee")
             for  donnees in collect.listeCoordonneesReussies:
-                fichier.write("Latitude : " + donnes[0] + ", Longitude : "+ donnes[1] + ", Tour : " + donnes[2] + ", Satelitte : " + donnes[3] + "\n")
+                print("dans fichierSortie()")
+                #fichier.write("Latitude : " + str(donnees[0]) + ", Longitude : "+ str(donnees[1]) + ", Tour : " + str(donnees[2]) + ", Satelitte : " + str(donnees[3]) + "\n")
         fichier.close()
 
     """
@@ -184,8 +118,8 @@ class Lanceur:
         #Tri par longitude decroissante
         self.listeCoordonneesTriees.sort(key=lambda x: x[1], reverse = True)
         #Puis tri par latitude croissante
-        self.listeCoordonneesTriees.sort(key=lambda x: x[0])
-        print("listeCoordonneesTriees", self.listeCoordonneesTriees)
+        self.listeCoordonneesTriees.sort(key=lambda x:x[0])
+        #print("listeCoordonneesTriees", self.listeCoordonneesTriees)
 
     """
     def initialiserListePhotosPossibles(self):
@@ -215,23 +149,141 @@ class Lanceur:
         """
         Lancement de la simulation
         """
-
+        
         print()
         print("Lancement de la simulation :")
+
+        tabPointsSat = []
+
+        for sat in self.listeSatellite:
+            polygone = sat.getPolygone(self.temps.getTempsTotal())
+            p = 0
+            aires = []
+            while (p < len(polygone)):
+                aire = (1/2)*abs(((polygone[p+0][0]*polygone[p+1][1])+(polygone[p+3][0]*polygone[p+0][1])-(polygone[p+1][0]*polygone[p+0][1])-(polygone[p+2][0]*polygone[p+1][1])-(polygone[p+3][0]*polygone[p+2][1])-(polygone[p+1][0]*polygone[p+2][1])+(polygone[p+2][0]*polygone[p+3][1])+(polygone[p+0][0]*polygone[p+3][1])))
+                aires.append(aire)
+                p = p + 4
+            print(aires)
+            for coord in self.listeCoordonneesTriees:
+                i = 0
+                aireCoord = 0
+                while (i < len(polygone)):
+                    v = 0
+                    while (v < 3):
+                        distA = math.sqrt((coord[0]-polygone[i+v][0])**2+(coord[1]-polygone[i+v][1])**2)
+                        distB = math.sqrt((coord[0]-polygone[i+v+1][0])**2+(coord[1]-polygone[i+v+1][1])**2)
+                        dist2Points = math.sqrt((polygone[i+v+1][0]-polygone[i+v][0])**2+(polygone[i+v][1]-polygone[i+v+1][1])**2)
+                        aireCoord += (1/4)*math.sqrt((distA+dist2Points+distB)*(-distA+dist2Points+distB)*(distA-dist2Points+distB)*(distA+dist2Points-distB))
+                        v = v + 1
+                    distA = math.sqrt((coord[0]-polygone[i][0])**2+(coord[1]-polygone[i][1])**2)
+                    distB = math.sqrt((coord[0]-polygone[i+3][0])**2+(coord[1]-polygone[i+3][1])**2)
+                    aireCoord += math.sqrt((polygone[i+3][0]-polygone[i][0])**2+(polygone[i+3][1]-polygone[i][1])**2)
+                    
+                    for ai in aires:
+                        print(ai)
+                        print(aireCoord)
+                        print()
+                    i = i + 4
+
+        """
+        tabPointsSat = [[]]*len(self.listeSatellite)
+        tabPointsSatFinal = [[]]*len(self.listeSatellite)
+        satClone = copy.deepcopy(self.listeSatellite)
+
+        #Rempli un tableau avec toutes les coordonnees que les satellites peuvent avoir
         while self.temps.getTempsActuel() < self.temps.getTempsTotal():
-            for s in self.listeSatellite:
-                for c in self.listeCoordonneesTriees:
-                    #Si la photo est sur la trajectoire du satellite
-                    if s.photoPossible(c) == True:
-                        print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",c)
-                        '''
-                            TODO: supprimer les coordonnees pouvant etre prise ne photo de listeCoordonnees
-                                et les rajouter dans listeCoordonneesReussies
-                        '''
+            for coord in self.listeCoordonneesTriees:
+                for cmpt in range(0, len(self.listeSatellite)):
+                    if satClone[cmpt].photoPossible(coord) and coord not in tabPointsSat[cmpt]:
+                        tabPointsSat[satClone[cmpt].getNumero()].append(coord)
+            for s in satClone:
                 s.calculePosition()
             self.temps.incrementer()
-        self.fichierSortie()
 
+        print("Part 1 done")
+
+        #Clone les tableaux
+        for it in range(0, len(tabPointsSat)):
+            tabPointsSat[0] = copy.copy(tabPointsSat[0])
+            tabPointsSatFinal[0] = copy.copy(tabPointsSatFinal[0])
+
+        print("Part 2 done")
+
+        #Donne des chemins uniques aux satellites
+        if len(tabPointsSat) > 1:
+            for a in range(0, len(tabPointsSat)):
+                if tabPointsSat[a]:
+                    for b in range(0, len(tabPointsSat)):
+                        if a != b:
+                            if tabPointsSat[a][0] in tabPointsSat[b]:
+                                tabPointsSat[b].remove(tabPointsSat[a][0])
+                    tabPointsSatFinal[a].append(tabPointsSat[a][0])
+                    del tabPointsSat[a][0]
+        else:
+            tabPointsSatFinal = tabPointsSat
+
+        print("Part 3 done")
+        """
+        """
+        for sat in self.listeSatellite:
+            lati, longi = sat.getPosition()
+            trier = False
+            while not trier:
+                if len(tabPointsSatFinal[sat.getNumero()]) > 1:
+                    if tabPointsSatFinal[sat.getNumero()][len(tabPointsSatFinal)][1] >= lati:
+                        if tabPointsSatFinal[sat.getNumero()][0][0] < lati:
+                            tabPointsSatFinal[sat.getNumero()].append(tabPointsSatFinal[sat.getNumero()][0])
+                            del tabPointsSatFinal[sat.getNumero()][0]
+                        else:
+                            trier = True
+                    else:
+                        trier = True
+                else:
+                    trier = True
+        """
+        """
+        self.temps.resetTemps()
+
+        print("Part 4 done")
+
+        print(tabPointsSatFinal)
+
+        print("Total avant : ", len(tabPointsSatFinal[0]))
+
+        while self.temps.getTempsActuel() < self.temps.getTempsTotal() and tabPointsSatFinal:
+            for s in self.listeSatellite:
+                if tabPointsSatFinal[s.getNumero()]:
+                    s.changerOrientation(tabPointsSatFinal[s.getNumero()][0])
+                    if s.photoPossible(tabPointsSatFinal[s.getNumero()][0]) == True:
+                        print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",tabPointsSatFinal[s.getNumero()][0])
+                        del tabPointsSatFinal[s.getNumero()][0]                    
+                s.calculePosition()
+            self.temps.incrementer()
+
+        print("Total : ", len(tabPointsSatFinal[0]))
+        """  
+        """
+            #Test si les photos peuvent etre prises
+            #Pour chaque collection
+            for c in self.listeCollection:
+                #Pour chaque coordonnees non prises en photo
+                for coord in c.getCoordonnees():
+                    #Pour chaque satellite
+                    for s in self.listeSatellite:
+                        #Si la photo est sur la trajectoire du satellite
+                        :
+                            #On supprime les coordonnees de la photo prise de toutes les collections
+                            for c2 in self.listeCollection:
+                                c2.suppressionElement(coord)
+                            print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",coord)
+                            c.suppressionElement(coord)
+            #MAJ de la position des satellites
+            for s in self.listeSatellite:
+                s.calculePosition()
+            #Passage au tour suivant
+            self.temps.incrementer()
+        self.fichierSortie()
+        """
     def getListeSatellite(self):
         """
         Accesseur - Renvoie la liste des satellites

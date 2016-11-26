@@ -33,6 +33,134 @@ class Satellite:
         self.delaiPhoto = 1
         self.numero = numero
 
+    def changerOrientation(self, coord):
+        #Si coord latitude est au nord du pointage de la camera
+        if coord[0] > self.pointageLatitude and self.deltaLatitude < self.orientationMax:
+            if self.pointageLatitude + self.changementOrientationMax > coord[0]:
+                self.changerOrientationLatitude((self.pointageLatitude+self.changementOrientationMax) - coord[0])
+            else:
+                if self.deltaLatitude + self.changementOrientationMax > self.orientationMax:
+                    self.changerOrientationLatitude(self.orientationMax - self.deltaLatitude)
+                else:
+                    self.changerOrientationLatitude(self.changementOrientationMax)
+        #Si coord lati est au sud du pointage de la camera
+        elif coord[0] < self.pointageLatitude and self.deltaLatitude > -self.orientationMax:
+            #Si en descendant la camera du changement Max on depasse (passe en dessous) de coord lati
+            if self.pointageLatitude - self.changementOrientationMax <= coord[0]:
+                if self.deltaLatitude > 0:
+                    self.changerOrientationLatitude(self.pointageLatitude - self.changementOrientationMax - coord[0])
+                else:
+                    self.changerOrientationLatitude(coord[0] - (self.pointageLatitude - self.changementOrientationMax))
+            #Si on reste au dessus
+            else:
+                #Si en bougeant on ne depasse pas l orientation max de la camera
+                if self.deltaLatitude + self.changementOrientationMax < self.orientationMax and  self.deltaLatitude - self.changementOrientationMax  > -self.orientationMax:
+                    self.changerOrientationLatitude(-self.changementOrientationMax)
+                #Si on depasse l orientation max de la camera
+                else:
+                    if self.deltaLatitude > 0:
+                        self.changerOrientationLatitude(-(self.orientationMax - self.deltaLatitude))
+                    else:
+                        self.changerOrientationLatitude(-(self.orientationMax + self.deltaLatitude))
+
+        #Si coord longi est a l est du pointage de la camera
+        if coord[1] > self.pointageLongitude and self.deltaLongitude < self.orientationMax:
+            if self.pointageLongitude + self.changementOrientationMax > coord[1]:
+                self.changerOrientationLongitude(coord[1] - self.pointageLongitude)
+            else:
+                if self.deltaLongitude + self.changementOrientationMax > self.orientationMax:
+                    self.changerOrientationLongitude(self.orientationMax - self.deltaLongitude)
+                else:
+                    self.changerOrientationLongitude(self.changementOrientationMax)
+        #Si coord longi est a l ouest du pointage de la camera
+        elif coord[1] < self.pointageLongitude and self.deltaLongitude > -self.orientationMax:
+            #Si en allant a gauche on depasse la coord longi
+            if self.pointageLongitude - self.changementOrientationMax <= coord[1]:
+                if self.deltaLongitude > 0:
+                    self.changerOrientationLongitude((self.pointageLongitude - self.changementOrientationMax) - coord[1])
+                else:
+                    self.changerOrientationLongitude(-(self.pointageLongitude - self.changementOrientationMax) + coord[1])
+            #Si on reste a l est
+            else:
+                #Si en bougeant on ne depasse pas l orientation max
+                if self.deltaLongitude + self.changementOrientationMax < self.orientationMax and self.deltaLongitude - self.changementOrientationMax > -self.orientationMax:
+                    self.changerOrientationLongitude(-self.changementOrientationMax)
+                else:
+                    if self.deltaLongitude > 0:
+                        self.changerOrientationLongitude(-(self.orientationMax - self.deltaLongitude))
+                    else:
+                        self.changerOrientationLongitude(-(self.orientationMax + self.deltaLongitude))
+
+    def getPolygone(self, tempsTotal):
+        res = []
+        latTmp = self.latitude
+        longTmp = self.longitude
+        totalDistance = self.vitesse * tempsTotal
+        disLat = 0
+        first = True
+        tab = []
+        while totalDistance != 0:
+            if first:
+                if (self.vitesse > 0):
+                    p1 = [self.latitude-self.orientationMax, self.longitude-self.orientationMax]
+                    p2 = [self.latitude-self.orientationMax, self.longitude+self.orientationMax]
+                else:
+                    p1 = [self.latitude+self.orientationMax, self.longitude-self.orientationMax]
+                    p2 = [self.latitude+self.orientationMax, self.longitude+self.orientationMax]
+                first = False
+            else:
+                if (self.vitesse > 0):
+                    p1 = [-324000, longTmp-self.orientationMax]
+                    p2 = [-324000, longTmp+self.orientationMax]
+                else:
+                    p1 = [324000, longTmp-self.orientationMax]
+                    p2 = [324000, longTmp+self.orientationMax]
+            tab.append(p1)
+            tab.append(p2)
+            #Si le satellite va vers le haut
+            if (self.vitesse > 0):
+                disLat = 324000 - latTmp
+                #Si on peut faire 1 tour
+                if (totalDistance > disLat):
+                    posLong = self.longitude - (15 * disLat/self.vitesse)
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [324000, posLong-self.orientationMax]
+                    p4 = [324000, posLong+self.orientationMax]
+                    totalDistance = totalDistance - disLat
+                    longTmp = posLong
+                    latTmp = -324000
+                else:
+                    posLong = longTmp - (15 * (totalDistance/self.vitesse))
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [latTmp + totalDistance, posLong-self.orientationMax]
+                    p4 = [latTmp + totalDistance, posLong+self.orientationMax]
+                    totalDistance = 0
+            #Si le satellite va vers le bas
+            else:
+                disLat = -324000 - latTmp
+                #Si on peut faire 1 tour
+                if (totalDistance < disLat):
+                    posLong = self.longitude - (15 * abs(disLat)/-self.vitesse)
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [-324000, posLong-self.orientationMax]
+                    p4 = [-324000, posLong+self.orientationMax]
+                    totalDistance = totalDistance - disLat
+                    longTmp = posLong
+                    latTmp = 324000
+                else:
+                    posLong = longTmp - (15 * (abs(totalDistance)/-self.vitesse))
+                    if (posLong < -648000):
+                        posLong = 647999 - (-648000 - posLong)
+                    p3 = [latTmp + totalDistance, posLong-self.orientationMax]
+                    p4 = [latTmp + totalDistance, posLong+self.orientationMax]
+                    totalDistance = 0
+            tab.append(p3)
+            tab.append(p4)
+        return tab
+
     def changerOrientationLatitude(self, valeur):
         """
         Change la valeur de l'orientation du satellite pour la latitude (deltaLatitude)
@@ -49,6 +177,7 @@ class Satellite:
             raise ValueError("Hors des limites de l'orientation maximum")
         else:
             self.deltaLatitude += valeur
+        self.calculPointageCamera()
 
     def changerOrientationLongitude(self, valeur):
         """
@@ -66,6 +195,7 @@ class Satellite:
             raise ValueError("Hors des limites de l'orientation maximum")
         else:
             self.deltaLongitude += valeur
+        self.calculPointageCamera()
 
     def calculePosition(self):
         """
@@ -89,6 +219,7 @@ class Satellite:
         #Si longitude depasse -648000" alors longitude repasse à 647999"
         if self.longitude < -648000:
             self.longitude = 648000 - (-self.longitude - 648000)
+        self.calculPointageCamera()
 
     def getOrientationSatellite(self):
         """
@@ -166,7 +297,7 @@ class Satellite:
         :rtype: boolean
         """
 
-        if int(int(coord[1]) < self.longitude+self.orientationMax and int(coord[1]) > self.longitude-self.orientationMax) and (int(coord[0]) > self.latitude - self.orientationMax and int(coord[0]) < self.latitude + self.orientationMax):
+        if (coord[1] < self.longitude+self.orientationMax and coord[1] > self.longitude-self.orientationMax) and (coord[0] > self.latitude - self.orientationMax and coord[0] < self.latitude + self.orientationMax):
             return True
         return False
 

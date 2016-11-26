@@ -64,22 +64,25 @@ class Collection:
 
         return self.listeCoordonneesReussies
 
-    def suppressionElement(self,liste):
+    def suppressionElement(self,coord):
         """
         Supprime les coordonnees du point potographie de listeCoordonnees et les rajoute dans listeCoordonneesReussies
 
         :param liste: les coordonnees du point photographiees à supprimer de listeCoordonnees
-        :type liste: [[int, int]]
+        :type liste: [int, int]
         :return: True si la liste des coordonnees des points d'interet restant a photographies est vide
                 False sinon
         :rtype: boolean
         """
 
-        # suppression de liste a listeCoordonnees
-        self.listeCoordonnees.remove(liste)
-        # ajout de liste a listeCoordonneesReussies
-        self.listeCoordonneesReussies.append(liste)
-        return estVide()
+        try:
+            # suppression de liste a listeCoordonnees
+            self.listeCoordonnees.remove(coord)
+            # ajout de liste a listeCoordonneesReussies
+            self.listeCoordonneesReussies.append(coord)
+            return self.estVide()
+        except ValueError:
+            return self.estVide()
 
     def estVide(self):
         """
