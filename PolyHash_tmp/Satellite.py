@@ -43,7 +43,13 @@ class Satellite:
         #Si coord latitude est au nord du pointage de la camera
         if coord[0] > self.pointageLatitude and self.deltaLatitude < self.orientationMax:
             if self.pointageLatitude + self.changementOrientationMax > coord[0]:
-                self.changerOrientationLatitude((self.pointageLatitude+self.changementOrientationMax) - coord[0])
+                if self.deltaLatitude + self.changementOrientationMax < self.orientationMax and self.deltaLatitude - self.changementOrientationMax > -self.orientationMax:
+                    self.changerOrientationLongitude(coord[0] - self.pointageLatitude)
+                else:
+                    if self.deltaLatitude > 0:
+                        self.changerOrientationLatitude(self.orientationMax - self.deltaLatitude)
+                    else:
+                        self.changerOrientationLatitude(self.orientationMax + self.deltaLatitude)
             else:
                 if self.deltaLatitude + self.changementOrientationMax > self.orientationMax:
                     self.changerOrientationLatitude(self.orientationMax - self.deltaLatitude)
@@ -72,7 +78,13 @@ class Satellite:
         #Si coord longi est a l est du pointage de la camera
         if coord[1] > self.pointageLongitude and self.deltaLongitude < self.orientationMax:
             if self.pointageLongitude + self.changementOrientationMax > coord[1]:
-                self.changerOrientationLongitude(coord[1] - self.pointageLongitude)
+                if self.deltaLongitude + self.changementOrientationMax < self.orientationMax and self.deltaLongitude - self.changementOrientationMax > -self.orientationMax:
+                    self.changerOrientationLongitude(coord[1] - self.pointageLongitude)
+                else:
+                    if self.deltaLongitude > 0:
+                        self.changerOrientationLongitude(self.orientationMax - self.deltaLongitude)
+                    else:
+                        self.changerOrientationLongitude(self.orientationMax + self.deltaLongitude)
             else:
                 if self.deltaLongitude + self.changementOrientationMax > self.orientationMax:
                     self.changerOrientationLongitude(self.orientationMax - self.deltaLongitude)
@@ -97,6 +109,49 @@ class Satellite:
                     else:
                         self.changerOrientationLongitude(-(self.orientationMax + self.deltaLongitude))
 
+    def intersection(self,X1,Y1,X2,Y2,X3,Y3,X4,Y4):
+        if not (max(X1,X2) < min(X3,X4)):
+            if ((X1-X2 != 0) and (X3-X4 != 0)):
+                A1 = (Y1-Y2)/(X1-X2)
+                A2 = (Y3-Y4)/(X3-X4)
+                b1 = Y1-A1*X1
+                b2 = Y3-A2*X3
+                if not (A1 == A2):
+                    Xa = (b2 - b1) / (A1 - A2)
+                    Ya = A1 * Xa + b1
+                    if not ( (Xa < max( min(X1,X2), min(X3,X4) )) or (Xa > min( max(X1,X2), max(X3,X4) )) ):
+                        return True
+        return False
+    
+    def pointDansTrajectoire(self, X, Y, temps):
+        poly = self.getPolygone(temps)
+        i = 0
+        X1 = X
+        Y1 = Y
+        X2 = 700000
+        Y2 = 700000
+        while (i < len(poly)):
+            p = 0
+            tab = []
+            while (p < 3):
+                X3 = poly[i+p][0]
+                Y3 = poly[i+p][1]
+                X4 = poly[i+1+p][0]
+                Y4 = poly[i+1+p][1]
+                if self.intersection(X1,Y1,X2,Y2,X3,Y3,X4,Y4) == True:
+                    tab.append(True)
+                p += 1
+            X3 = poly[i+3][0]
+            Y3 = poly[i+3][1]
+            X4 = poly[i][0]
+            Y4 = poly[i][1]
+            if self.intersection(X1,Y1,X2,Y2,X3,Y3,X4,Y4) == True:
+                    tab.append(True)
+            if not (len(tab)%2 == 0):
+                return True
+            i += 4
+        return False
+            
     def getPolygone(self, tempsTotal):
         """
         Renvoie le polygone du satellite qui correspond a son projete sur Terre pendant la duree de la simulation
@@ -299,6 +354,11 @@ class Satellite:
             if int(int(coord[1]) < self.longitude+self.orientationMax and int(coord[1]) > self.longitude-self.orientationMax) and (int(coord[0]) > self.latitude - self.orientationMax and int(coord[0]) < self.latitude + self.orientationMax):
                 ret += 1
         return ret
+
+    def prendrePhotoPossible(self, coord):
+        if (coord[1] == self.pointageLongitude) and (coord[0] == self.pointageLatitude):
+            return True
+        return False
 
     def photoPossible(self, coord):
         """
