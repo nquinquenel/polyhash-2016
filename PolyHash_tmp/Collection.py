@@ -68,16 +68,16 @@ class Collection:
         """
         Methode permettant d ajouter la liste des coordonnees reussies et des donnees dans la listeCoordonneesReussies
 
-        :param donnees: les coordonnees du point photographiees, le tour et le numero du satelitte 
+        :param donnees: les coordonnees du point photographiees, le tour et le numero du satelitte
         :type liste: [int, int, int, int]
-        """        
+        """
         self.listeCoordonneesReussies.append(donnees)
 
     def fusionDonnees(self,coord,tour,numSatellite):
         """
         Methode permettant de fusionner les differentes valeurs pour obtenir une liste du type souhaite
 
-        :param coord: les coordonnees du point photographiees 
+        :param coord: les coordonnees du point photographiees
         :type liste: [int, int]
         :param tour: tour durant lequel la photographie est prise
         :type: int
@@ -89,12 +89,12 @@ class Collection:
         coord.append(tour)
         coord.append(numSatellite)
         return coord
-        
+
     def prisePhoto(self,coord,tour,numSatellite):
         """
         Methode permettant de gerer la prise d une photo au sein de la classe Collection
-        
-        :param coord: les coordonnees du point photographiees 
+
+        :param coord: les coordonnees du point photographiees
         :type liste: [int, int]
         :param tour: tour durant lequel la photographie est prise
         :type: int
@@ -106,7 +106,7 @@ class Collection:
         """
         self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
         return self.suppressionElement(coord)
-    
+
     def suppressionElement(self,coord):
         """
         Supprime les coordonnees du point potographie de listeCoordonnees et les rajoute dans listeCoordonneesReussies
