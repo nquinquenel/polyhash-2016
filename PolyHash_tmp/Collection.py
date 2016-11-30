@@ -1,3 +1,5 @@
+import copy
+
 class Collection:
     """
     Cette classe gere les collections d images
@@ -69,61 +71,52 @@ class Collection:
         Methode permettant d ajouter la liste des coordonnees reussies et des donnees dans la listeCoordonneesReussies
 
         :param donnees: les coordonnees du point photographiees, le tour et le numero du satelitte
-        :type liste: [int, int, int, int]
+        :type donnees: [int, int, int, int]
         """
         self.listeCoordonneesReussies.append(donnees)
 
     def fusionDonnees(self,coord,tour,numSatellite):
         """
-        Methode permettant de fusionner les differentes valeurs pour obtenir une liste du type souhaite
+        Methode permettant, lorsqu'un point est photographie, d'y associer le tour courant et le numero du satellite l'ayant pris en photo
 
         :param coord: les coordonnees du point photographiees
-        :type liste: [int, int]
+        :type coord: [int, int]
         :param tour: tour durant lequel la photographie est prise
-        :type: int
-        :param tour: numero du satellite ayant pris la photographie
-        :type: int
+        :type tour: int
+        :param numSatellite: numero du satellite ayant pris la photographie
+        :type numSatellite: int
         :return: la liste contenant toutes les donnes
         :rtype: [[int, int, int, int]]
         """
-        coord.append(tour)
-        coord.append(numSatellite)
-        return coord
+        tabClone = copy.deepcopy(coord)
+        tabClone.append(tour)
+        tabClone.append(numSatellite)
+        return tabClone
 
     def prisePhoto(self,coord,tour,numSatellite):
         """
         Methode permettant de gerer la prise d une photo au sein de la classe Collection
 
         :param coord: les coordonnees du point photographiees
-        :type liste: [int, int]
+        :type coord: [int, int]
         :param tour: tour durant lequel la photographie est prise
-        :type: int
-        :param tour: numero du satellite ayant pris la photographie
-        :type: int
-        :return: True si la liste des coordonnees des points d'interet restant a photographies est vide
-                False sinon
-        :rtype: boolean
-        """
-        self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
-        return self.suppressionElement(coord)
-
-    def suppressionElement(self,coord):
-        """
-        Supprime les coordonnees du point potographie de listeCoordonnees et les rajoute dans listeCoordonneesReussies
-
-        :param liste: les coordonnees du point photographiees à supprimer de listeCoordonnees
-        :type liste: [int, int]
+        :type tour: int
+        :param numSatellite: numero du satellite ayant pris la photographie
+        :type numSatellite: int
         :return: True si la liste des coordonnees des points d'interet restant a photographies est vide
                 False sinon
         :rtype: boolean
         """
 
+        # si le point n'est pas dans listeCoordonnees, cela declenchera une exception
         try:
-            # suppression de liste a listeCoordonnees
+            # essai de suppression des coordonnees du point de listeCoordonnees
             self.listeCoordonnees.remove(coord)
-            return self.estVide()
+            # L'exception ValueError n'est pas declenchee, on peut donc rajouter ce point dans la liste des coordonnees reussies (listeCoordonneesReussies)
+            self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
         except ValueError:
-            return self.estVide() #interet de faire ça ?
+            pass
+
 
     def estVide(self):
         """
