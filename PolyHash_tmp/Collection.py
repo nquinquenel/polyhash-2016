@@ -93,29 +93,51 @@ class Collection:
         tabClone.append(numSatellite)
         return tabClone
 
-    def prisePhoto(self,coord,tour,numSatellite):
+    def prisePhoto(self,coord,tour,numSatellite, tempsActuel):
         """
         Methode permettant de gerer la prise d une photo au sein de la classe Collection
 
         :param coord: les coordonnees du point photographiees
-        :type coord: [int, int]
         :param tour: tour durant lequel la photographie est prise
-        :type tour: int
         :param numSatellite: numero du satellite ayant pris la photographie
+        :param tempsActuel: le temps actuel de la simulation
+        :type coord: [int, int]
+        :type tour: int
         :type numSatellite: int
-        :return: True si la liste des coordonnees des points d'interet restant a photographies est vide
-                False sinon
+        :type tempsActuel: int
+        :return: True si le point est dans la collection MAIS que l'intervalle de temps requis n'est pas respecte
+                False si le point a ete pris
         :rtype: boolean
         """
 
-        # si le point n'est pas dans listeCoordonnees, cela declenchera une exception
-        try:
-            # essai de suppression des coordonnees du point de listeCoordonnees
-            self.listeCoordonnees.remove(coord)
-            # L'exception ValueError n'est pas declenchee, on peut donc rajouter ce point dans la liste des coordonnees reussies (listeCoordonneesReussies)
-            self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
-        except ValueError:
-            pass
+        # Si la coordonnee testee est dans la collection
+        if(coord in self.listeCoordonnees):
+            print("coordonnee dans la liste de coordonnees")
+            # Test si le temps courant est dans l'intervalle du temps requis par la collection, condition d'une prise potentielle de photo
+            dansIntervalle = False
+            for intervalle in self.tempsRequis:
+                if(intervalle[0] <= tempsActuel and intervalle[1] >= tempsActuel):
+                    dansIntervalle = True
+            # Si l'intervalle est bon
+            if(dansIntervalle):
+                print("dans intervalle")
+                # Suppression de cette coordonnees dans listeCoordonnees
+                self.listeCoordonnees.remove(coord)
+                # On rajoute ensuite ce point dans la liste des coordonnees reussie (listeCoordonneesReussies)
+                self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
+        #         # Si le point est dans la liste de coordonnees restant a prendre ET dans l'intervalle
+        #         return 1
+        #     else:
+        #         # Si le point est dans la liste de coordonnees restant a prendre MAIS PAS dans l'intervalle
+        #         return 2
+        # else:
+        #     # Si le point n'est pas dans la liste de coordonnees a prendre
+        #     return 3
+            else:
+                print("pas dans intervalle")
+        else:
+            print("pas dans la liste de coordonnees")
+
 
 
     def estVide(self):
@@ -124,7 +146,6 @@ class Collection:
 
         :return: True si la liste des coordonnees des points d'interet restant a photographies est vide
                 False sinon
-
         :rtype: boolean
         """
 
