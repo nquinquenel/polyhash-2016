@@ -1,3 +1,6 @@
+from math import *
+import copy
+
 class Satellite:
     """
     Cette classe s occupe des interactions avec le satellite et la camera
@@ -32,6 +35,38 @@ class Satellite:
         self.pointageLongitude = self.longitude + self.deltaLongitude
         self.delaiPhoto = 1
         self.numero = numero
+        self.temps = 0
+        self.vitesseDefaut = vitesse
+
+    def prochainPoint(self, coord):
+        if (self.vitesse > 0 and (self.latitude - self.orientationMax) < coord[0]):
+            temps = ((coord[0] - (self.latitude + self.orientationMax)) // self.vitesse) + 1
+            self.latitude += self.vitesse * temps
+            self.longitude = self.longitude - (15 * temps)
+        elif (self.vitesse > 0 and (self.latitude - self.orientationMax) > coord[0]):
+            distance = 324000 - (self.latitude + self.orientationMax)
+            distance = distance + (coord[0] + 324000)
+            temps = (distance // self.vitesse) + 1
+            self.latitude = coord[0] - self.orientationMax
+        elif (self.vitesse < 0 and (self.latitude + self.orientationMax) > coord[0]):
+            temps = (-(coord[0] - (self.latitude - self.orientationMax)) // -self.vitesse) + 1
+            self.latitude = coord[0] + self.orientationMax
+            self.longitude = self.longitude - (15 * temps)
+        elif (self.vitesse < 0 and (self.latitude + self.orientationMax) < coord[0]):
+            distance = -(-324000 - (self.latitude - self.orientationMax))
+            distance = distance + (324000 + coord[0])
+            temps = (distance // self.vitesse) + 1
+            self.latitude = coord[0] + self.orientationMax
+        
+        self.longitude = self.longitude - (15 * temps)
+        if (self.longitude < -648000):
+            self.longitude = 647999 - (-self.longitude - 648000)
+        self.temps += temps
+        res = []
+        res.append(self.temps)
+        res.append(self.numero)
+        res.append(coord)
+        return res
 
     def changerOrientation(self, coord):
         """
@@ -39,6 +74,70 @@ class Satellite:
 
         :param coord: les coordonnees du prochain point a photographier
         :type coord: [int, int]
+        """
+        distanceLatitude = coord[0] - self.pointageLatitude
+        distanceLongitude = coord[1] - self.pointageLongitude
+        
+        #Si coord latitude est au nord du pointage de la camera
+        if coord[0] > self.pointageLatitude and self.deltaLatitude < self.orientationMax:
+            #Si la distance est plus petite que le changement d'orientation max
+            if distanceLatitude < self.changementOrientationMax:
+                #Si la distance est plus petite que ce que peut encore bouger le satellite
+                if distanceLatitude < (self.orientationMax - self.deltaLatitude):
+                    self.changerOrientationLatitude(distanceLatitude)
+                else:
+                    self.changerOrientationLatitude(self.orientationMax - self.deltaLatitude)
+            else:
+                if self.changementOrientationMax < (self.orientationMax - self.deltaLatitude):
+                    self.changerOrientationLatitude(self.changementOrientationMax)
+                else:
+                    self.changerOrientationLatitude(self.orientationMax - self.deltaLatitude)
+
+        elif coord[0] < self.pointageLatitude and self.deltaLatitude > -self.orientationMax:
+            if -distanceLatitude < (self.changementOrientationMax):
+                if -distanceLatitude < (self.orientationMax + self.deltaLatitude):
+                    self.changerOrientationLatitude(distanceLatitude)
+                else:
+                    self.changerOrientationLatitude(-self.orientationMax + self.deltaLatitude)
+            else:
+                if self.changementOrientationMax < (self.orientationMax + self.deltaLatitude):
+                    coef = (coord[0] - self.pointageLatitude)%-self.vitesse
+                    if coef > self.changementOrientationMax:
+                        self.changerOrientationLatitude(-self.changementOrientationMax)
+                    elif coef < self.changementOrientationMax:
+                        self.changerOrientationLatitude(self.changementOrientationMax)
+                    elif coef != 0:
+                        print(coef)
+                        self.changerOrientationLatitude(coef)
+                else:
+                    self.changerOrientationLatitude(-self.orientationMax - self.deltaLatitude)
+
+        #Si coord longitude est à l'est du pointage de la camera
+        if coord[1] > self.pointageLongitude and self.deltaLongitude < self.orientationMax:
+            #Si la distance est plus petite que le chang
+            if distanceLongitude < (self.changementOrientationMax):
+                if distanceLongitude < (self.orientationMax - self.deltaLongitude):
+                    self.changerOrientationLongitude(distanceLongitude)
+                else:
+                    self.changerOrientationLongitude(self.orientationMax - self.deltaLongitude)
+            else:
+                if self.changementOrientationMax < (self.orientationMax -self.deltaLongitude):
+                    self.changerOrientationLongitude(self.changementOrientationMax)
+                else:
+                    self.changerOrientationLongitude(self.orientationMax - self.deltaLongitude)
+
+        elif coord[1] < self.pointageLongitude and self.deltaLongitude > -self.orientationMax:
+            if -distanceLongitude < (self.changementOrientationMax):
+                if -distanceLongitude < (self.orientationMax + self.deltaLongitude):
+                    self.changerOrientationLongitude(distanceLongitude)
+                else:
+                    self.changerOrientationLongitude(-self.orientationMax - self.deltaLongitude)
+            else:
+                if self.changementOrientationMax < (self.orientationMax + self.deltaLongitude):
+                    self.changerOrientationLongitude(-self.changementOrientationMax)
+                else:
+                    self.changerOrientationLongitude(-self.orientationMax - self.deltaLongitude)
+
         """
         #Si coord latitude est au nord du pointage de la camera
         if coord[0] > self.pointageLatitude and self.deltaLatitude < self.orientationMax:
@@ -107,54 +206,12 @@ class Satellite:
                     if self.deltaLongitude > 0:
                         self.changerOrientationLongitude(-(self.orientationMax - self.deltaLongitude))
                     else:
-                        self.changerOrientationLongitude(-(self.orientationMax + self.deltaLongitude))
-
-    def intersection(self,X1,Y1,X2,Y2,X3,Y3,X4,Y4):
-        if not (max(X1,X2) < min(X3,X4)):
-            if ((X1-X2 != 0) and (X3-X4 != 0)):
-                A1 = (Y1-Y2)/(X1-X2)
-                A2 = (Y3-Y4)/(X3-X4)
-                b1 = Y1-A1*X1
-                b2 = Y3-A2*X3
-                if not (A1 == A2):
-                    Xa = (b2 - b1) / (A1 - A2)
-                    Ya = A1 * Xa + b1
-                    if not ( (Xa < max( min(X1,X2), min(X3,X4) )) or (Xa > min( max(X1,X2), max(X3,X4) )) ):
-                        return True
-        return False
-    
-    def pointDansTrajectoire(self, X, Y, temps):
-        poly = self.getPolygone(temps)
-        i = 0
-        X1 = X
-        Y1 = Y
-        X2 = 700000
-        Y2 = 700000
-        while (i < len(poly)):
-            p = 0
-            tab = []
-            while (p < 3):
-                X3 = poly[i+p][0]
-                Y3 = poly[i+p][1]
-                X4 = poly[i+1+p][0]
-                Y4 = poly[i+1+p][1]
-                if self.intersection(X1,Y1,X2,Y2,X3,Y3,X4,Y4) == True:
-                    tab.append(True)
-                p += 1
-            X3 = poly[i+3][0]
-            Y3 = poly[i+3][1]
-            X4 = poly[i][0]
-            Y4 = poly[i][1]
-            if self.intersection(X1,Y1,X2,Y2,X3,Y3,X4,Y4) == True:
-                    tab.append(True)
-            if not (len(tab)%2 == 0):
-                return True
-            i += 4
-        return False
+                      self.changerOrientationLongitude(-(self.orientationMax + self.deltaLongitude))
+    """
             
     def getPolygone(self, tempsTotal):
         """
-        Renvoie le polygone du satellite qui correspond a son projete sur Terre pendant la duree de la simulation
+        Renvoie les polygones du satellite qui correspond a son projete sur Terre pendant la duree de la simulation
 
         :param tempsTotal: le temps total de la conversation
         :type tempsTotal: int
@@ -162,73 +219,132 @@ class Satellite:
         :rtype: [int]
         """
         res = []
-        latTmp = self.latitude
-        longTmp = self.longitude
-        totalDistance = self.vitesse * tempsTotal
-        disLat = 0
+        longitude = self.longitude
+        latitude = self.latitude
+        vit = copy.deepcopy(self.vitesse)
+        totalDistance = vit * tempsTotal
         first = True
-        tab = []
-        while totalDistance != 0:
+        while (totalDistance != 0):
+            tab = []
+            #Permet de définir le début
             if first:
-                if (self.vitesse > 0):
-                    p1 = [self.latitude-self.orientationMax, self.longitude-self.orientationMax]
-                    p2 = [self.latitude-self.orientationMax, self.longitude+self.orientationMax]
+                
+                #Si le satellite va vers le haut
+                if (vit > 0):
+                    #Point en bas à gauche
+                    tab.append([latitude - self.orientationMax, longitude - self.orientationMax])
+                    #Point en bas à droite
+                    tab.append([latitude - self.orientationMax, longitude + self.orientationMax])
+                    #Point en haut à droite
+                    tab.append([latitude + self.orientationMax, longitude + self.orientationMax])
                 else:
-                    p1 = [self.latitude+self.orientationMax, self.longitude-self.orientationMax]
-                    p2 = [self.latitude+self.orientationMax, self.longitude+self.orientationMax]
+                    #Point en haut à gauche
+                    tab.append([latitude + self.orientationMax, longitude - self.orientationMax])
+                    #Point en haut à droite
+                    tab.append([latitude + self.orientationMax, longitude + self.orientationMax])
+                    #Point en bas à droite
+                    tab.append([latitude - self.orientationMax, longitude + self.orientationMax])
                 first = False
             else:
-                if (self.vitesse > 0):
-                    p1 = [-324000, longTmp-self.orientationMax]
-                    p2 = [-324000, longTmp+self.orientationMax]
+                if (vit > 0):
+                    #Point à gauche du bas
+                    tab.append([latitude, longitude - self.orientationMax])
+                    #Point à droite du bas
+                    tab.append([latitude, longitude + self.orientationMax])
+                    #Point en haut à droite du bas
+                    tab.append([latitude + self.orientationMax, longitude + self.orientationMax])
                 else:
-                    p1 = [324000, longTmp-self.orientationMax]
-                    p2 = [324000, longTmp+self.orientationMax]
-            tab.append(p1)
-            tab.append(p2)
-            #Si le satellite va vers le haut
-            if (self.vitesse > 0):
-                disLat = 324000 - latTmp
+                    #Point à gauche du haut
+                    tab.append([latitude, longitude - self.orientationMax])
+                    #Point à droite du haut
+                    tab.append([latitude, longitude + self.orientationMax])
+                    #Point en bas à droite du haut
+                    tab.append([latitude - self.orientationMax, longitude - self.orientationMax])
+                    
+            #Si le satellite va vers le haut (trajectoire nord ouest)   
+            if (vit > 0):
+                distanceLatitude = 324000 - latitude
                 #Si on peut faire 1 tour
-                if (totalDistance > disLat):
-                    posLong = self.longitude - (15 * disLat/self.vitesse)
-                    if (posLong < -648000):
-                        posLong = 647999 - (-648000 - posLong)
-                    p3 = [324000, posLong-self.orientationMax]
-                    p4 = [324000, posLong+self.orientationMax]
-                    totalDistance = totalDistance - disLat
-                    longTmp = posLong
-                    latTmp = -324000
+                if (totalDistance > distanceLatitude):
+                    temps = distanceLatitude // vit
+                    distanceLatitude = (vit * temps)
+                    pointLatitude = latitude + distanceLatitude
+                    pointLongitude = longitude - (15 * temps)
+                    
+                    if (pointLongitude < -648000):
+                        pointLongitude = 647999 + (pointLongitude + 648000)
+                    
+                    tab.append([pointLatitude, pointLongitude + self.orientationMax])
+                    tab.append([pointLatitude, pointLongitude - self.orientationMax])
+                    tab.append([pointLatitude - self.orientationMax, pointLongitude - self.orientationMax])
+                    
+                    tempsBis = 0
+                    while (latitude < 324000):
+                        latitude += vit
+                        tempsBis += 1
+                    totalDistance = totalDistance - distanceLatitude - (latitude - 324000)
+                    latitude = 648000 - latitude
+                    vit = -vit
+                    longitude = -648000 + (longitude - (15 * tempsBis))
+
+                    if (longitude < -648000):
+                        longitude = 647999 + (longitude + 648000)
+                #Si on peut pas faire un tour
                 else:
-                    posLong = longTmp - (15 * (totalDistance/self.vitesse))
-                    if (posLong < -648000):
-                        posLong = 647999 - (-648000 - posLong)
-                    p3 = [latTmp + totalDistance, posLong-self.orientationMax]
-                    p4 = [latTmp + totalDistance, posLong+self.orientationMax]
+                    temps = distanceLatitude / vit
+                    pointLatitude = latitude + distanceLatitude
+                    pointLongitude = longitude - (15 * temps)
+
+                    if (pointLongitude < -648000):
+                        pointLongitude = 647999 + (pointLongitude + 648000)
+
+                    tab.append([latitude + self.orientationMax, pointLongitude + self.orientationMax])
+                    tab.append([latitude + self.orientationMax, pointLongitude - self.orientationMax])
+                    tab.append([latitude - self.orientationMax, pointLongitude< - self.orientationMax])
+
                     totalDistance = 0
-            #Si le satellite va vers le bas
+            #Si le satellite va vers le bas (trajectoire sud ouest)
             else:
-                disLat = -324000 - latTmp
-                #Si on peut faire 1 tour
-                if (totalDistance < disLat):
-                    posLong = self.longitude - (15 * abs(disLat)/-self.vitesse)
-                    if (posLong < -648000):
-                        posLong = 647999 - (-648000 - posLong)
-                    p3 = [-324000, posLong-self.orientationMax]
-                    p4 = [-324000, posLong+self.orientationMax]
-                    totalDistance = totalDistance - disLat
-                    longTmp = posLong
-                    latTmp = 324000
+                distanceLatitude = 324000 + latitude
+                if (totalDistance > distanceLatitude):
+                    temps = distanceLatitude // vit
+                    distanceLatitude = (vit * temps)
+                    pointLatitude = latitude - distanceLatitude
+                    pointLongitude = longitude + (15 * temps)
+
+                    if (pointLongitude < -648000):
+                        pointLongitude = 647999 + (pointLongitude + 648000)
+
+                    tab.append([pointLatitude, pointLongitude + self.orientationMax])
+                    tab.append([pointLatitude, pointLongitude - self.orientationMax])       
+                    tab.append([pointLatitude + self.orientationMax, pointLongitude - self.orientationMax])
+                    
+                    tempsBis = 0
+                    while (latitude > -324000):
+                        latitude += vit
+                        tempsBis += 1
+                    totalDistance = totalDistance - distanceLatitude - (latitude + 324000)
+                    latitude = -648000 - latitude
+                    vit = -vit
+                    longitude = -648000 + (longitude - (15 * tempsBis))
+                    if (longitude < -648000):
+                        longitude = 647999 + (longitude + 648000)
                 else:
-                    posLong = longTmp - (15 * (abs(totalDistance)/-self.vitesse))
-                    if (posLong < -648000):
-                        posLong = 647999 - (-648000 - posLong)
-                    p3 = [latTmp + totalDistance, posLong-self.orientationMax]
-                    p4 = [latTmp + totalDistance, posLong+self.orientationMax]
+                    temps = distanceLatitude / vit
+                    pointLatitude = latitude + distanceLatitude
+                    pointLongitude = longitude - (15 * temps)
+
+                    if (pointLongitude < -648000):
+                        pointLongitude = 647999 + (pointLongitude + 648000)
+
+                    tab.append([latitude - self.orientationMax, pointLongitude + self.orientationMax])
+                    tab.append([latitude - self.orientationMax, pointLongitude - self.orientationMax])
+                    tab.append([latitude + self.orientationMax, pointLongitude - self.orientationMax])
+
                     totalDistance = 0
-            tab.append(p3)
-            tab.append(p4)
-        return tab
+            #Ajoute un polygone au tableau résultat qui peut en contenir plusieurs
+            res.append(tab)
+        return res
 
     def changerOrientationLatitude(self, valeur):
         """
@@ -270,13 +386,12 @@ class Satellite:
         """
         Calcul la position du satellite au tour t+1
         """
-
         #Si latitude + vitesse se trouve entre -90 degre et 90 degre
-        if self.latitude <= 324000 and self.latitude >= -324000:
+        if self.latitude + self.vitesse <= 324000 and self.latitude + self.vitesse >= -324000:
             self.latitude = self.latitude + self.vitesse
             self.longitude = self.longitude - 15
         #Si latitude + vitesse se trouve superieur a 90 degre (il vient de depasser le Pole Nord)
-        elif self.latitude > 324000:
+        elif self.latitude + self.vitesse > 324000:
             self.latitude = (324000*2) - (self.latitude + self.vitesse)
             self.longitude = -(324000*2) + (self.longitude - 15)
             self.vitesse = -self.vitesse
@@ -385,6 +500,20 @@ class Satellite:
 
         return self.pointageLatitude, self.pointageLongitude
 
+    def peutPrendrePoint(self, coord, tempsCoord, tempsActu):
+        ret = True
+        temps = (coord[0] - self.pointageLatitude) / self.vitesse
+        if (temps) > (tempsCoord - tempsActu):
+            ret = False
+        if (coord[1] - self.pointageLongitude)/15 > (tempsCoord - tempsActu):
+            ret = False
+        return ret
+
+
+    def setPointageCamera(self, latitude, longitude):
+        self.pointageLatitude = latitude
+        self.pointageLongitude = longitude
+
     def getNumero(self):
         """
         Retourne le numero du satellite
@@ -394,6 +523,12 @@ class Satellite:
         """
 
         return self.numero
+
+    def getVitesse(self):
+        return self.vitesse
+
+    def resetVitesse(self):
+        self.vitesse = self.vitesseDefaut
 
     def string(self):
         """
