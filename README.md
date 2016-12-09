@@ -14,7 +14,7 @@ Equipe et répartition des tâches(non exhaustive) :
     -Gestion de la classe Satellite
         -Changement d'orientation
         -Calcul de la trajectoire
-        -Gestion des attributs du salitte (orientation, delta, pointage etc.)
+        -Gestion des attributs du satellite (orientation, delta, pointage etc.)
         -Prendre une photo
         -Déterminer les photos possibles à prendre actuellement sous le satellite
     -Création de la première version du programme principal
@@ -24,8 +24,12 @@ Equipe et répartition des tâches(non exhaustive) :
 
 -SOYER Mathieu:
 
-    -Gestion de la classe Collection
     -Documentation DocString
+    -Gestion des intervalles de temps pour la prise d'une photo
+    -Gestion apres prise photo d'un point d'interet
+        -Mettre a jour les collections contenant ce point
+        -Mettre a jour les chemins des satellites contenant un point valide pour toutes les collections en prenant en compte leur(s) intervalle(s) requis
+
 
 -EHRESMANN Nicolas:
 
