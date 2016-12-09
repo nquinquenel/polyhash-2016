@@ -125,18 +125,14 @@ class Collection:
                 self.listeCoordonnees.remove(coord)
                 # On rajoute ensuite ce point dans la liste des coordonnees reussie (listeCoordonneesReussies)
                 self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
-        #         # Si le point est dans la liste de coordonnees restant a prendre ET dans l'intervalle
-        #         return 1
-        #     else:
-        #         # Si le point est dans la liste de coordonnees restant a prendre MAIS PAS dans l'intervalle
-        #         return 2
-        # else:
-        #     # Si le point n'est pas dans la liste de coordonnees a prendre
-        #     return 3
+                # Si le point est dans la liste de coordonnees restant a prendre ET dans l'intervalle
+                return False
             else:
-                print("pas dans intervalle")
+                # Si le point est dans la liste de coordonnees restant a prendre MAIS PAS dans l'intervalle
+                return True
         else:
-            print("pas dans la liste de coordonnees")
+            # Si le point n'est pas dans la liste de coordonnees a prendre
+            return False
 
 
 
