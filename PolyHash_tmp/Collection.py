@@ -93,16 +93,14 @@ class Collection:
         tabClone.append(numSatellite)
         return tabClone
 
-    def prisePhoto(self,coord,tour,numSatellite, tempsActuel):
+    def prisePhoto(self, coord, numSatellite, tempsActuel):
         """
         Methode permettant de gerer la prise d une photo au sein de la classe Collection
 
         :param coord: les coordonnees du point photographiees
-        :param tour: tour durant lequel la photographie est prise
         :param numSatellite: numero du satellite ayant pris la photographie
         :param tempsActuel: le temps actuel de la simulation
         :type coord: [int, int]
-        :type tour: int
         :type numSatellite: int
         :type tempsActuel: int
         :return: True si le point est dans la collection MAIS que l'intervalle de temps requis n'est pas respecte
@@ -112,19 +110,17 @@ class Collection:
 
         # Si la coordonnee testee est dans la collection
         if(coord in self.listeCoordonnees):
-            print("coordonnee dans la liste de coordonnees")
             # Test si le temps courant est dans l'intervalle du temps requis par la collection, condition d'une prise potentielle de photo
             dansIntervalle = False
             for intervalle in self.tempsRequis:
-                if(intervalle[0] <= tempsActuel and intervalle[1] >= tempsActuel):
+                if(int(intervalle[0]) <= tempsActuel and int(intervalle[1]) >= tempsActuel):
                     dansIntervalle = True
             # Si l'intervalle est bon
             if(dansIntervalle):
-                print("dans intervalle")
                 # Suppression de cette coordonnees dans listeCoordonnees
                 self.listeCoordonnees.remove(coord)
                 # On rajoute ensuite ce point dans la liste des coordonnees reussie (listeCoordonneesReussies)
-                self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tour,numSatellite))
+                self.ajouteElementCoordonneesReussies(self.fusionDonnees(coord,tempsActuel,numSatellite))
                 # Si le point est dans la liste de coordonnees restant a prendre ET dans l'intervalle
                 return False
             else:
