@@ -57,10 +57,22 @@ class Satellite:
         vit = copy.deepcopy(self.vitesse)
         totalDistance = vit * tempsTotal
         first = True
+        longiTour = False
         while (totalDistance != 0):
             tab = []
             #Permet de définir le début
-            if first:
+            if longiTour:
+                if (vit > 0):
+                    tab.append([latitude - self.orientationMax, longitude - self.orientationMax])
+                    tab.append([latitude - self.orientationMax, longitude])
+                    tab.append([latitude + self.orientationMax, longitude])
+                    longiTour = False
+                else:
+                    tab.append([latitude + self.orientationMax, longitude + self.orientationMax])
+                    tab.append([latitude + self.orientationMax, longitude])
+                    tab.append([latitude - self.orientationMax, longitude])
+                    longiTour = False
+            elif first:
                 
                 #Si le satellite va vers le haut
                 if (vit > 0):
@@ -106,23 +118,43 @@ class Satellite:
                     pointLongitude = longitude - (15 * temps)
                     
                     if (pointLongitude < -648000):
-                        pointLongitude = 647999 + (pointLongitude + 648000)
-                    
-                    tab.append([pointLatitude, pointLongitude + self.orientationMax])
-                    tab.append([pointLatitude, pointLongitude - self.orientationMax])
-                    tab.append([pointLatitude - self.orientationMax, pointLongitude - self.orientationMax])
-                    
-                    tempsBis = 0
-                    while (latitude < 324000):
-                        latitude += vit
-                        tempsBis += 1
-                    totalDistance = totalDistance - distanceLatitude - (tempsBis * vit)
-                    latitude = 648000 - latitude
-                    vit = -vit
-                    longitude = -648000 + (longitude - (15 * tempsBis))
+                        distLongLim = (-648000) - longitude
+                        tempsLong = -distLongLim / 15
+                        tempsLong = int(tempsLong)
+                        distanceLatitude = (tempsLong * vit)
+                        pointLatitude = latitude + distanceLatitude
+                        pointLongitude = longitude - (15 * tempsLong)
 
-                    if (longitude < -648000):
+                        tab.append([pointLatitude + self.orientationMax, pointLongitude + self.orientationMax])
+                        tab.append([pointLatitude + self.orientationMax, pointLongitude])
+                        tab.append([pointLatitude - self.orientationMax, pointLongitude])
+
+                        tempsBis2 = 0
+                        while (longitude > -648000):
+                            longitude = longitude - 15
+                            tempsBis2 += 1
+                        totalDistance = totalDistance - distanceLatitude - (tempsBis2 * vit)
+                        latitude = latitude + (tempsBis2 * vit)
+
                         longitude = 647999 + (longitude + 648000)
+                        longiTour = True
+                        
+                    else:
+                        tab.append([pointLatitude, pointLongitude + self.orientationMax])
+                        tab.append([pointLatitude, pointLongitude - self.orientationMax])
+                        tab.append([pointLatitude - self.orientationMax, pointLongitude - self.orientationMax])
+                        
+                        tempsBis = 0
+                        while (latitude < 324000):
+                            latitude += vit
+                            tempsBis += 1
+                        totalDistance = totalDistance - distanceLatitude - (tempsBis * vit)
+                        latitude = 648000 - latitude
+                        vit = -vit
+                        longitude = -648000 + (longitude - (15 * tempsBis))
+
+                        if (longitude < -648000):
+                            longitude = 647999 + (longitude + 648000)
                 #Si on peut pas faire un tour
                 else:
                     temps = distanceLatitude // vit
@@ -148,22 +180,42 @@ class Satellite:
                     pointLongitude = longitude + (15 * temps)
 
                     if (pointLongitude < -648000):
-                        pointLongitude = 647999 + (pointLongitude + 648000)
+                        distLongLim = (-648000) - longitude
+                        tempsLong = -distLongLim / 15
+                        tempsLong = int(tempsLong)
+                        distanceLatitude = (tempsLong * vit)
+                        pointLatitude = latitude + distanceLatitude
+                        pointLongitude = longitude - (15 * tempsLong)
 
-                    tab.append([pointLatitude, pointLongitude + self.orientationMax])
-                    tab.append([pointLatitude, pointLongitude - self.orientationMax])       
-                    tab.append([pointLatitude + self.orientationMax, pointLongitude - self.orientationMax])
-                    
-                    tempsBis = 0
-                    while (latitude > -324000):
-                        latitude += vit
-                        tempsBis += 1
-                    totalDistance = totalDistance - distanceLatitude - (tempsBis * vit)
-                    latitude = -648000 - latitude
-                    vit = -vit
-                    longitude = -648000 + (longitude - (15 * tempsBis))
-                    if (longitude < -648000):
+                        tab.append([pointLatitude + self.orientationMax, pointLongitude + self.orientationMax])
+                        tab.append([pointLatitude + self.orientationMax, pointLongitude])
+                        tab.append([pointLatitude - self.orientationMax, pointLongitude])
+
+                        tempsBis2 = 0
+                        while (longitude > -648000):
+                            longitude = longitude - 15
+                            tempsBis2 += 1
+                        totalDistance = totalDistance - distanceLatitude - (tempsBis2 * vit)
+                        latitude = latitude + (tempsBis2 * vit)
+
                         longitude = 647999 + (longitude + 648000)
+                        longiTour = False
+                    else:
+
+                        tab.append([pointLatitude, pointLongitude + self.orientationMax])
+                        tab.append([pointLatitude, pointLongitude - self.orientationMax])       
+                        tab.append([pointLatitude + self.orientationMax, pointLongitude - self.orientationMax])
+                        
+                        tempsBis = 0
+                        while (latitude > -324000):
+                            latitude += vit
+                            tempsBis += 1
+                        totalDistance = totalDistance - distanceLatitude - (tempsBis * vit)
+                        latitude = -648000 - latitude
+                        vit = -vit
+                        longitude = -648000 + (longitude - (15 * tempsBis))
+                        if (longitude < -648000):
+                            longitude = 647999 + (longitude + 648000)
                 else:
                     temps = distanceLatitude / vit
                     pointLatitude = latitude + distanceLatitude
