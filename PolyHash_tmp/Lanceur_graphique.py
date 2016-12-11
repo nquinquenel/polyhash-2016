@@ -4,7 +4,7 @@ from Satellite import Satellite
 import copy
 import math
 from tkinter import *
-
+import os
 """
 Version Interface Graphique du programme Lanceur via Tkinter
 """
@@ -135,7 +135,7 @@ class Lanceur:
             print(satellite.getPosition())
     """
 
-	
+
 
 
     def validationCollection(self):
@@ -157,7 +157,7 @@ class Lanceur:
         """
         Lancement de la simulation
         """
-        
+
         print()
         print("Lancement de la simulation :")
 
@@ -186,7 +186,7 @@ class Lanceur:
                     distA = math.sqrt((coord[0]-polygone[i][0])**2+(coord[1]-polygone[i][1])**2)
                     distB = math.sqrt((coord[0]-polygone[i+3][0])**2+(coord[1]-polygone[i+3][1])**2)
                     aireCoord += math.sqrt((polygone[i+3][0]-polygone[i][0])**2+(polygone[i+3][1]-polygone[i][1])**2)
-                    
+
                     for ai in aires:
                         print(ai)
                         print(aireCoord)
@@ -264,12 +264,12 @@ class Lanceur:
                     s.changerOrientation(tabPointsSatFinal[s.getNumero()][0])
                     if s.photoPossible(tabPointsSatFinal[s.getNumero()][0]) == True:
                         print("Tour : ", self.temps.getTempsActuel()," Satellite : ",s.getNumero(), " Coordonnees pt d'interet: ",tabPointsSatFinal[s.getNumero()][0])
-                        del tabPointsSatFinal[s.getNumero()][0]                    
+                        del tabPointsSatFinal[s.getNumero()][0]
                 s.calculePosition()
             self.temps.incrementer()
 
         print("Total : ", len(tabPointsSatFinal[0]))
-        """  
+        """
         """
             #Test si les photos peuvent etre prises
             #Pour chaque collection
@@ -313,6 +313,16 @@ class Lanceur:
         return self.listeCollection
 
 # initialisation d'un prt")
+
+class StdoutRedirector(object):
+    def __init__(self,text_widget):
+        self.text_space = text_widget
+
+    def write(self,string):
+        self.text_space.config(state = "normal")
+        self.text_space.insert('end', string)
+        self.text_space.see('end')
+
 class SatGraph:
     """
     Classe pour l interface graphique du programme
@@ -322,10 +332,12 @@ class SatGraph:
         """
         Initialisation de la classe avec les differents widgets
         """
-    
-    
-    
+
         self.root=root
+        self.initUI()
+        self.fname=''
+    def initUI(self):
+
         root.title("Polyhash")
         self.frame = Frame(self.root,width=768, height=576)
 
@@ -334,17 +346,31 @@ class SatGraph:
 
         self.button2 = Button(root,text="Lanceur", fg="black",command=self.lancesimu)
         self.button2.pack()
+        self.button3 = Button(root, text= "Browse", fg="black",command=self.load_file )
+        self.button3.pack()
+        self.text_box = Text(self.root, wrap='word', height =50, width =100)
+        self.text_box.pack()
+        ##self.text_box.grid(column=0, row=0, columnspan = 2, sticky='NSWE', padx=5, pady=5)
+        sys.stdout = StdoutRedirector(self.text_box)
 
-        self.frame.pack()
+        self.frame.pack(fill=BOTH, expand=1)
+    def load_file(self):
+        fname = filedialog.askopenfilename(filetypes=(("Fichiers Collections", "*.txt"),(("All files", "*.*"))))
+        print(os.path.split(fname)[1])
+        if fname:
+            try: self.fname=os.path.split(fname)[1]
+    
+            except:
+                print("open source file", "failed to read file\n%s'"% fname)
+        return
+
     def close_window(self):
         self.root.destroy()  #commande pour fermer la fenetre
 
     def lancesimu(self):
-        Lanceur("test.txt")  #commande pour lancer le script
-        
+        Lanceur(self.fname)  #commande pour lancer le script
+
 root = Tk()                 #fenetre principale
 satgraph = SatGraph(root)
 root.mainloop()
  #test
-
-        
