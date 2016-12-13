@@ -6,6 +6,11 @@ de points d'intérêt à photographier, de sorte à maximiser le nombre d'images
 
 ===========
 
+Lien de la vidéo :
+Mot de passe : polygone
+
+===========
+
 Equipe et répartition des tâches(non exhaustive) :
 
 
