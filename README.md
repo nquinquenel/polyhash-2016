@@ -6,7 +6,7 @@ de points d'intérêt à photographier, de sorte à maximiser le nombre d'images
 
 ===========
 
-Lien de la vidéo :
+Lien de la vidéo : http://filex.univ-nantes.fr/get?k=KkYgSz5JFkKke11Y9N
 Mot de passe : polygone
 
 ===========
