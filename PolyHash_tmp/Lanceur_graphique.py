@@ -4,6 +4,7 @@ from Satellite import Satellite
 import copy
 import math
 from tkinter import *
+from threading import *
 import os
 """
 Version Interface Graphique du programme Lanceur via Tkinter
@@ -81,7 +82,7 @@ class Lanceur:
             #Tri par latitude croissante et, si meme latitude par longitude decroissante
             self.trierListeCoordonneesTriees()
             #Initialise la liste des photos sur la trajectoire des satellites
-
+            self.tailleCollection=len(self.listeCollection)
     def fichierSortie(self):
         """
         Ecrit le fichier de sortie contenant:
@@ -342,7 +343,6 @@ class Lanceur:
         # Ecriture du fichier de sortie
         self.fichierSortie()
 
-
     def pointDansPolygone(self,x,y,poly):
         n = len(poly)
         dedans = False
@@ -390,7 +390,7 @@ class Lanceur:
             del self.listeCollection[colId]
 
         print("nombre de collections apres suppression des collections inutiles :", len(self.listeCollection))
-
+        
 
     def getListeSatellite(self):
         """
@@ -412,16 +412,19 @@ class Lanceur:
 
         return self.listeCollection
 
-# initialisation d'un prt")
+    
 
-class StdoutRedirector(object):
+class consoleinTextBox(object):
+    """
+    classe pour rediriger l'output de la console vers un widget textbox
+    """
     def __init__(self,text_widget):
-        self.text_space = text_widget
+        self.text_box = text_widget
 
     def write(self,string):
-        self.text_space.config(state = "normal")
-        self.text_space.insert('end', string)
-        self.text_space.see('end')
+        self.text_box.config(state = "normal")
+        self.text_box.insert('end', string)
+        self.text_box.see('end')
 
 class SatGraph:
     """
@@ -430,81 +433,90 @@ class SatGraph:
 
     def __init__(self, root):
         """
-        Initialisation de la classe avec les differents widgets
+        Initialisation de la classe 
         """
 
         self.root=root
         self.initUI()
-        self.fname=''
+        self.fname='' #le fichier qui va etre utilisé
+        
     def initUI(self):
+        """
+        initialisation des widgets
+        """
         root.title("Polyhash")
-        self.frame = Frame(self.root,width=765, height=575, bd=1)
-        self.iframe = Frame(self.frame, bd=2)
-        self.iframe.pack(expand=1,fill=X,pady=10, padx=5)
-##        self.c=Canvas(self.iframe, bg='white',width=750,height=550)
-##        self.c.grid(row=0,column=0)
-##        self.c.pack(expand=1)
+        self.frame = Frame(self.root,width=765, height=575, bd=1)   #frame pour les bouttons et le texte a afficher
+        self.frame2 = Frame(self.frame, bd=2)
+        self.frame2.pack(expand=1,fill=X,pady=10, padx=5)           #frame pour la carte affichée
         self.photo=PhotoImage(file='./World_map.gif')
-##        self.cback=Label(self.c,image=self.photo)
-##        self.cback.place(x=0,y=0,relwidth=1,relheight=1)
         self.button1 = Button(root,text="Close", fg="black",command=self.close_window)
         self.button1.pack()
-        self.button2 = Button(root,text="Lanceur", fg="black",command=self.lancesimu)
+        self.button2 = Button(root,text="Browse", fg="black",command=self.get_file)
         self.button2.pack()
-        self.button3 = Button(root, text= "Browse", fg="black",command=self.load_file )
+        self.button3 = Button(root, text= "Start", fg="black",command=self.lancesimu )
         self.button3.pack()
-        self.button4=Button(root, text="test", fg="black", command=self.test)
-        self.button4.pack(side="left")
         self.text_box = Text(self.root, wrap='word', height =20, width =73)
         self.text_box.pack()
-        ##self.text_box.grid(column=0, row=0, columnspan = 2, sticky='NSWE', padx=5, pady=5)
-        sys.stdout = StdoutRedirector(self.text_box)
+        self.c=Canvas(self.frame2, bg='white',width=675,height=455)
+        self.c.grid(row=0,column=0)
+        self.c.create_image(675//2,455//2,anchor=CENTER,image=self.photo) #background avec la carte du monde en 2D
+        sys.stdout = consoleinTextBox(self.text_box)
         self.frame.pack(fill=BOTH, expand=1)
-        self.photo2=PhotoImage(file='./green-dot-s.gif')
-    def load_file(self):
-        fname = filedialog.askopenfilename(filetypes=(("Fichiers Collections", "*.in"),(("All files", "*.*"))))
-        print(os.path.split(fname)[1])
-        if fname:
-            try: self.fname=fname
+        self.photo2=PhotoImage(file='./green-dot-s.gif')                  #les points validés seront en vert
+        self.photo3=PhotoImage(file='./black-dot-s.gif')                  #les points non validés seront en noir
+        
+    def get_file(self):
+        """
+        classe pour gerer la selection du fichier input
+        """
+        fname = filedialog.askopenfilename(filetypes=(("Fichiers Collections", "*.in"),(("All files", "*.*"))))  #browser pour le choix du fichier
+        print("fichier choisi:",os.path.split(fname)[1])
+        if fname:                                    #verification que le fichier est accesible                                                
+            try: self.fname=fname                            
     
             except:
-                print("open source file", "failed to read file\n%s'"% fname)
+                print("le fichier n'a pas pu etre ouvert")
         return
 
     def close_window(self):
         self.root.destroy()  #commande pour fermer la fenetre
+    def getcoords(self,cords):
+        """
+        fonction pour convertir les coordonnees en arcsecondes en coordonnees polaires utilisant les formules de la projection de mercator
+        (https://en.wikipedia.org/wiki/Mercator_projection#Derivation_of_the_Mercator_projection)
+        """
+        mapwidth=675
+        mapheight=455
+        x=(cords[1]/3600+180)*(mapwidth/360)
+        n=math.log(math.tan((math.pi/4)+(((cords[0]/3600)*math.pi/180)/2)))
+        y=(mapheight/2)-(mapheight*n/(2*math.pi))
+        return x,y
     def drawmap(self):
-        global gpoint
-        self.c=Canvas(self.iframe, bg='white',width=750,height=550)
-        self.c.grid(row=0,column=0)
+        """
+        classe pour dessiner la carte avec les points pris et pas pris
+        """
         
-##        self.cback=Label(self.c,image=self.photo)
-##        self.cback.place(x=0,y=0,relwidth=1,relheight=1)
-        self.c.create_image(375,275,anchor=CENTER,image=self.photo)
-        mapwidth=750
-        mapheight=550
+       
         L1= self.L.listeCollectionValidee
         for col in L1:
             list_c=col.getCoordonneesReussies()
-            for cord in list_c:
-                x=(cord[1]/3600+180)*(mapwidth/360)
-                n=math.log(math.tan((math.pi/4)+(((cord[0]/3600)*math.pi/180)/2)))
-                y=(mapheight/2)-(mapheight*n/(2*math.pi))
-                print(x,y)
-                self.c.create_image(x,y,image=self.photo2)
+            for cords in list_c:
+                x,y=self.getcoords(cords)
+                if(x<650):
+                   self.c.create_image(x,y,image=self.photo2)
+        L2 = self.L.listeCollection
+        for col in L2:
+            list_c2=col.getCoordonnees()
+            for cords in list_c2:
+                x,y=self.getcoords(cords)
+                if x<650:
+                    self.c.create_image(x,y,image=self.photo3)
     def lancesimu(self):
-        self.L=Lanceur(self.fname) #commande pour lancer le script
-        self.drawmap()
-    def test(self):
-        global gpoint
-        x=250
-        y=250
-        gpoint = self.c.create_image(x,y,image=self.photo2)
-        self.c.update_idletasks
-        x=x+20
-        y=y+20
+            self.L=Lanceur(self.fname) #commande pour lancer le script
+            self.drawmap()
+              
 
 root = Tk()                 #fenetre principale
 satgraph = SatGraph(root)
 root.mainloop()
- #test
+
